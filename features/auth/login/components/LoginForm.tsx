@@ -1,6 +1,6 @@
 "use client";
 import { Mail, Lock } from "lucide-react";
-import InputField from "../../components/InputField";
+import InputField from "../../../../features/auth/components/InputField";
 import { useLoginForm } from "../hooks/useLoginForms";
 import Link from "next/link";
 
@@ -21,6 +21,8 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit} className="space-y-5">
 
         <InputField
+          autoComplete="email"
+          id="email"
           label="Email"
           type="email"
           placeholder="elena@ejemplo.com"
@@ -31,6 +33,8 @@ export default function LoginForm() {
         />
 
         <InputField
+          autoComplete="current-password"
+          id="contraseña"
           label="Contraseña"
           type="password"
           placeholder="••••••••"
@@ -47,6 +51,7 @@ export default function LoginForm() {
         )}
 
         <button
+          aria-label="Iniciar sesión"
           type="submit"
           disabled={loading}
           className="w-full bg-foreground text-primary-foreground py-3.5 rounded-xl font-semibold text-sm tracking-wide hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"

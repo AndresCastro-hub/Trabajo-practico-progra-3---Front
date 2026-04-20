@@ -2,7 +2,7 @@
 
 import { Mail, Lock, User } from "lucide-react";
 import { useRegisterForm } from "../hooks/useRegisterForm";
-import InputField from "../../components/InputField";
+import InputField from "../../../../features/auth/components/InputField";
 import Link from "next/link";
 
 export default function RegisterForm() {
@@ -24,6 +24,8 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit} className="space-y-5">
 
         <InputField
+          autoComplete="name"
+          id="nombre"
           label="Nombre completo"
           type="text"
           placeholder="Elena Martín"
@@ -34,6 +36,8 @@ export default function RegisterForm() {
         />
 
         <InputField
+          autoComplete="email"
+          id="email"
           label="Email"
           type="email"
           placeholder="elena@ejemplo.com"
@@ -44,6 +48,8 @@ export default function RegisterForm() {
         />
 
         <InputField
+          autoComplete="new-password"
+          id="contraseña"
           label="Contraseña"
           type="password"
           placeholder="••••••••"
@@ -54,6 +60,8 @@ export default function RegisterForm() {
         />
 
         <InputField
+          autoComplete="new-password"
+          id="confirmarContraseña"
           label="Confirmar contraseña"
           type="password"
           placeholder="••••••••"
@@ -70,6 +78,7 @@ export default function RegisterForm() {
         )}
 
         <button
+          aria-label="crear cuenta"
           type="submit"
           disabled={loading}
           className="w-full bg-foreground text-primary-foreground py-3.5 rounded-xl font-semibold text-sm tracking-wide hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"

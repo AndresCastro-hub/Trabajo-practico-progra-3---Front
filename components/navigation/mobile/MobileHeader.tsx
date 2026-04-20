@@ -1,18 +1,17 @@
 "use client"
-
 import { useState } from "react"
 import { usePathname } from "next/navigation"
 import { Menu } from "lucide-react"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import Logo from "@/components/Logo"
 import CardUser from "@/components/navigation/CardUser"
-import Sidebar from "../Sidebar"
+import SideBarNav from "../SideBarNav/SideBarNav"
 
 const pageTitles: Record<string, string> = {
   "/calendario": "Plan Semanal",
-  "/recetario":  "Recetario",
-  "/compras":    "Compras",
-  "/admin":      "Admin",
+  "/recetario": "Recetario",
+  "/compras": "Compras",
+  "/admin": "Admin",
 }
 
 export default function MobileHeader() {
@@ -38,21 +37,29 @@ export default function MobileHeader() {
 
           <SheetContent side="left" className="w-[260px] p-0 flex flex-col bg-background">
 
+            <SheetTitle className="sr-only">
+              Menú de navegación
+            </SheetTitle>
+
+            <SheetDescription className="sr-only">
+              Navegación principal de la aplicación
+            </SheetDescription>
+
             <div className="flex items-center gap-2.5 px-5 py-5 border-b border-gray-100">
-              <Logo/>
+              <Logo />
             </div>
 
-            <Sidebar/>
+            <SideBarNav />
 
-            <CardUser/>
+            <CardUser />
 
           </SheetContent>
         </Sheet>
 
         {/* //Aca deberia colocar el logo */}
-        <div className="w-6 h-6 rounded-full bg-green-500" /> 
+        <div className="w-6 h-6 rounded-full bg-green-500" />
 
-        <span className="text-sm font-semibold text-gray-900">{currentTitle}</span> 
+        <span className="text-sm font-semibold text-gray-900">{currentTitle}</span>
       </div>
     </header>
   )
