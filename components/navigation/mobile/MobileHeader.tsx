@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { usePathname } from "next/navigation"
-import { Menu } from "lucide-react"
+import { Menu, Zap } from "lucide-react"
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import Logo from "@/components/Logo"
 import CardUser from "@/components/navigation/CardUser"
@@ -56,8 +56,9 @@ export default function MobileHeader() {
           </SheetContent>
         </Sheet>
 
-        {/* //Aca deberia colocar el logo */}
-        <div className="w-6 h-6 rounded-full bg-green-500" />
+        <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+           <Zap size={18} className="text-white" fill="white" />
+        </div>
 
         <span className="text-sm font-semibold text-gray-900">{currentTitle}</span>
       </div>
