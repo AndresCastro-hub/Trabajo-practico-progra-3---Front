@@ -20,7 +20,7 @@ export default function MobileHeader() {
 
   const currentTitle = Object.entries(pageTitles).find(([key]) =>
     pathname.startsWith(key)
-  )?.[1] ?? "Vitalis"
+  )?.[1] ?? "Meal Prep"
 
   return (
     <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100">

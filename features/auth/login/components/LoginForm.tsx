@@ -1,17 +1,18 @@
 "use client";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, AlertCircle } from "lucide-react";
 import InputField from "../../../../features/auth/components/InputField";
 import { useLoginForm } from "../hooks/useLoginForms";
 import Link from "next/link";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function LoginForm() {
-  const { email, setEmail, password, setPassword, error, loading, handleSubmit } = useLoginForm();
+  const { email, errors, password, serverError, setEmail, setPassword, validateEmail, validatePassword, handleSubmit } = useLoginForm();
 
   return (
     <section>
 
       <h1 className="text-2xl font-bold text-foreground mb-2 leading-tight">
-        Bienvenida de nuevo
+        Bienvenido de nuevo
       </h1>
 
       <p className="text-muted-foreground text-sm mb-8">
@@ -28,8 +29,9 @@ export default function LoginForm() {
           placeholder="elena@ejemplo.com"
           value={email}
           onChange={setEmail}
+          error={errors.email}
+          validate={validateEmail}
           icon={<Mail size={16} />}
-          required
         />
 
         <InputField
@@ -39,24 +41,26 @@ export default function LoginForm() {
           type="password"
           placeholder="••••••••"
           value={password}
+          validate={validatePassword}
+          error={errors.password}
           onChange={setPassword}
           icon={<Lock size={16} />}
-          required
         />
 
-        {error && (
-          <p className="text-destructive text-xs">
-            {error}
-          </p>
+        {serverError && (
+          <Alert variant="destructive">
+            <AlertCircle size={16} />
+            <AlertDescription>{serverError}</AlertDescription>
+          </Alert>
         )}
 
         <button
           aria-label="Iniciar sesión"
           type="submit"
-          disabled={loading}
+          disabled={!!errors.email || !!errors.password}
           className="w-full bg-foreground text-primary-foreground py-3.5 rounded-xl font-semibold text-sm tracking-wide hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
         >
-          {loading ? "Ingresando..." : "Iniciar sesión →"}
+          Iniciar sesión
         </button>
 
       </form>

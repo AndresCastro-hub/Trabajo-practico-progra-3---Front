@@ -1,6 +1,15 @@
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function CardUser() {
+
+    const router = useRouter()
+
+    const handleLogout = () => {
+        document.cookie = "token=; max-age=0; path=/"
+        router.push("/login")
+    }
+
     return (
         <aside className="px-4 py-4 border-t border-border">
             <div className="flex items-center gap-2.5 mb-3">
@@ -18,7 +27,7 @@ export default function CardUser() {
                 </div>
             </div>
 
-            <button className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={handleLogout} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
                 <LogOut size={13} />
                 Cerrar sesión
             </button>

@@ -3,14 +3,20 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { sideBarNavItems } from "../SideBarNav/sideBarNavItems"
-
-
+import { useAuth } from "@/hooks/useAuth"
 
 export default function BottomNav() {
   const pathname = usePathname()
+  const { role } = useAuth()
+
+  const navItems = sideBarNavItems.filter(item =>
+    item.roles.includes(role!)
+  )
+
+
   return (
     <nav className="md:hidden flex border-t border-gray-100 bg-white">
-      {sideBarNavItems.map(({ href, label, icon: Icon }) => {
+      {navItems.map(({ href, label, icon: Icon }) => {
         const active = pathname.startsWith(href)
         return (
           <Link

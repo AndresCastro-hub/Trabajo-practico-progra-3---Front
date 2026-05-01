@@ -2,17 +2,24 @@ import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { sideBarNavItems } from "./sideBarNavItems"
+import { useAuth } from "@/hooks/useAuth"
 
 export default function SideBarNav() {
     const pathname = usePathname()
 
+    const { role } = useAuth()
+
+    const navItems = sideBarNavItems.filter(item =>
+        item.roles.includes(role!)
+    )
+
     return (
-          <nav className="flex-1 px-3 py-4">
+        <nav className="flex-1 px-3 py-4">
             <p className="text-[10px] font-medium text-muted-foreground tracking-widest px-3 mb-2">
                 ESPACIO
             </p>
 
-            {sideBarNavItems.map(({ href, label, icon: Icon }) => {
+            {navItems.map(({ href, label, icon: Icon }) => {
                 const active = pathname.startsWith(href)
 
                 return (

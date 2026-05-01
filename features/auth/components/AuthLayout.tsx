@@ -25,7 +25,7 @@ export default function AuthLayout({ children, imageSrc, imageAlt, badge, headin
 
         <footer>
           <p className="text-xs text-muted-foreground text-center">
-            © 2026 Vitalis. Todos los derechos reservados.
+            © 2026 Meal prep. Todos los derechos reservados.
           </p>
         </footer>
       </div>

@@ -15,6 +15,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </main>
 
         <BottomNav />
+        
       </div>
     </div>
   )

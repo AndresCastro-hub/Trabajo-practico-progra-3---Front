@@ -7,7 +7,7 @@ export default function Logo() {
                 <Zap size={18} className="text-white" fill="white" />
             </div>
             <span className="font-semibold text-foreground text-lg tracking-tight">
-                Vitalis
+                Meal Prep
             </span>
         </>
     )
