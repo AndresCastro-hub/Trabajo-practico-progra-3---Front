@@ -1,25 +1,36 @@
 import { jwtDecode } from "jwt-decode"
 import { NextRequest, NextResponse } from "next/server"
+import { roleMap } from "./hooks/useAuth"
 
 const routeRoles: Record<string, string[]> = {
-  "/admin": ["admin"],  
+  "/admin": ["admin"],
 }
+
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value
-  const isLoginPage = request.nextUrl.pathname === "/login"
+  const pathname = request.nextUrl.pathname
+  const isLoginPage = pathname === "/login"
 
   if (!token && !isLoginPage) {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 
+  if (token && isLoginPage) {
+    return NextResponse.redirect(new URL("/calendario", request.url))
+  }
+
   if (token) {
     try {
-      const decoded = jwtDecode<{ role: string }>(token)
-      const pathname = request.nextUrl.pathname
-      const allowedRoles = routeRoles[pathname]
+      const decoded = jwtDecode<{ rolId: number }>(token)
+      const role = roleMap[decoded.rolId]
 
-      if (allowedRoles && !allowedRoles.includes(decoded.role)) {
-        //En el futuro podemos redirign a una pantalla de unauthorized pero por ahora va a calendario
+      const matchedRoute = Object.keys(routeRoles).find(route =>
+        pathname.startsWith(route)
+      )
+
+      const allowedRoles = matchedRoute ? routeRoles[matchedRoute] : null
+
+      if (allowedRoles && !allowedRoles.includes(role)) {
         return NextResponse.redirect(new URL("/calendario", request.url))
       }
     } catch {
@@ -31,5 +42,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/calendario", "/recetario", "/compras", "/admin"],
+  matcher: ["/calendario", "/recetario", "/compras", "/admin/:path*"],
 }

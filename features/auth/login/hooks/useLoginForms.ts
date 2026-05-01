@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "../services/loginService";
+import { validate, ValidationRule } from "@/lib/utils/validate";
 
 export function useLoginForm() {
     const router = useRouter();
@@ -9,32 +10,41 @@ export function useLoginForm() {
     const [errors, setErrors] = useState<{ email: string | null, password: string | null }>({ email: null, password: null });
     const [serverError, setServerError] = useState<string | null>(null);
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    const emailRules = [
+        {
+            test: (value: string) => !value,
+            message: "El email es obligatorio",
+        },
+        {
+            test: (value: string) => !emailRegex.test(value),
+            message: "El formato de email es inválido",
+        }
+    ]
+
+    const passwordRules = [
+        {
+            test: (value: string) => !value,
+            message: "La contraseña es requerida",
+        },
+        {
+            test: (value: string) => value.length <= 3,
+            message: "La contraseña debe tener más de 3 caracteres",
+        },
+    ];
 
     const validateEmail = (currentValue?: string) => {
         const value = currentValue ?? email;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        let messageError = '';
-        if (!value) {
-            messageError = 'El email es obligatorio';
-        } else if (!emailRegex.test(value)) {
-            messageError = 'El formato de email es invalido';
-        }
+        const messageError = validate(value, emailRules);
         setErrors((prev) => ({ ...prev, email: messageError }));
-
-    }
+    };
 
     const validatePassword = (currentValue?: string) => {
         const value = currentValue ?? password;
-        let messageError = ''
-        if (!value) {
-            messageError = 'La contraseña es requerida'
-        } else if (value.length <= 3) {
-            messageError = 'La contraseña debe tener mas de 3 caracteres'
-        }
+        const messageError = validate(value, passwordRules);
         setErrors((prev) => ({ ...prev, password: messageError }));
-
-    }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
