@@ -4,9 +4,12 @@ import InputField from "../../../../features/auth/components/InputField";
 import { useLoginForm } from "../hooks/useLoginForms";
 import Link from "next/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useLoginValidation } from "../hooks/useLoginValidation";
+import { camposCompletos, contieneErrores } from "@/lib/utils/validate";
 
 export default function LoginForm() {
-  const { email, errors, password, serverError, setEmail, setPassword, validateEmail, validatePassword, handleSubmit } = useLoginForm();
+  const { email, password, serverError, setEmail, setPassword, handleSubmit } = useLoginForm();
+  const { errors, validateEmail, validatePassword } = useLoginValidation(email,password);
 
   return (
     <section>
@@ -57,7 +60,7 @@ export default function LoginForm() {
         <button
           aria-label="Iniciar sesión"
           type="submit"
-          disabled={!!errors.email || !!errors.password}
+          disabled={contieneErrores(errors) || !camposCompletos({email,password}) }
           className="w-full bg-foreground text-primary-foreground py-3.5 rounded-xl font-semibold text-sm tracking-wide hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
         >
           Iniciar sesión

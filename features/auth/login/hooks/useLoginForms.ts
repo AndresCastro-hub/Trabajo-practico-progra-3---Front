@@ -1,50 +1,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "../services/loginService";
-import { validate, ValidationRule } from "@/lib/utils/validate";
+
+interface FormStateLogin {
+    email: string
+    password: string
+}
 
 export function useLoginForm() {
     const router = useRouter();
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [errors, setErrors] = useState<{ email: string | null, password: string | null }>({ email: null, password: null });
+    const [formStateLogin, setFormStateLogin] = useState<FormStateLogin>({ email: '', password: '' })
     const [serverError, setServerError] = useState<string | null>(null);
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const { email, password } = formStateLogin
 
-    const emailRules = [
-        {
-            test: (value: string) => !value,
-            message: "El email es obligatorio",
-        },
-        {
-            test: (value: string) => !emailRegex.test(value),
-            message: "El formato de email es inválido",
-        }
-    ]
+    const setEmail = (value: string) => {
+        setFormStateLogin((prev) => ({ ...prev, email: value }))
+    }
 
-    const passwordRules = [
-        {
-            test: (value: string) => !value,
-            message: "La contraseña es requerida",
-        },
-        {
-            test: (value: string) => value.length <= 3,
-            message: "La contraseña debe tener más de 3 caracteres",
-        },
-    ];
-
-    const validateEmail = (currentValue?: string) => {
-        const value = currentValue ?? email;
-        const messageError = validate(value, emailRules);
-        setErrors((prev) => ({ ...prev, email: messageError }));
-    };
-
-    const validatePassword = (currentValue?: string) => {
-        const value = currentValue ?? password;
-        const messageError = validate(value, passwordRules);
-        setErrors((prev) => ({ ...prev, password: messageError }));
-    };
+    const setPassword = (value: string) => {
+        setFormStateLogin((prev) => ({ ...prev, password: value }));
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -63,5 +39,5 @@ export function useLoginForm() {
         }
     };
 
-    return { email, password, errors, serverError, setEmail, setPassword, validateEmail, handleSubmit, validatePassword };
+    return { email, password, serverError, setEmail, setPassword, handleSubmit };
 }

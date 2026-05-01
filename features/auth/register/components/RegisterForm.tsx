@@ -1,18 +1,17 @@
 "use client";
 
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User, AlertCircle } from "lucide-react";
 import { useRegisterForm } from "../hooks/useRegisterForm";
 import InputField from "../../../../features/auth/components/InputField";
 import Link from "next/link";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useRegisterValidation } from "../hooks/useRegisterValidation";
+import { camposCompletos, contieneErrores } from "@/lib/utils/validate";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function RegisterForm() {
-  const {
-    nombre, setNombre,
-    email, setEmail,
-    password, setPassword,
-    confirm, setConfirm,
-    error, loading, handleSubmit
-  } = useRegisterForm();
+  const { name, email, password, confirmPassword, serverError, usuarioCreado, setNombre, setEmail, setPassword, setConfirmPassword, handleSubmit } = useRegisterForm();
+  const { errors, validateEmail, validatePassword, validateConfirmPassword, validateNombre } = useRegisterValidation(email, password, name, confirmPassword);
 
   return (
     <section className="pt-6">
@@ -29,10 +28,11 @@ export default function RegisterForm() {
           label="Nombre completo"
           type="text"
           placeholder="Elena Martín"
-          value={nombre}
+          value={name}
           onChange={setNombre}
+          validate={validateNombre}
+          error={errors.name}
           icon={<User size={16} />}
-          required
         />
 
         <InputField
@@ -44,7 +44,8 @@ export default function RegisterForm() {
           value={email}
           onChange={setEmail}
           icon={<Mail size={16} />}
-          required
+          error={errors.email}
+          validate={validateEmail}
         />
 
         <InputField
@@ -56,7 +57,8 @@ export default function RegisterForm() {
           value={password}
           onChange={setPassword}
           icon={<Lock size={16} />}
-          required
+          error={errors.password}
+          validate={validatePassword}
         />
 
         <InputField
@@ -65,25 +67,44 @@ export default function RegisterForm() {
           label="Confirmar contraseña"
           type="password"
           placeholder="••••••••"
-          value={confirm}
-          onChange={setConfirm}
+          value={confirmPassword}
+          onChange={setConfirmPassword}
           icon={<Lock size={16} />}
-          required
+          error={errors.confirmPassword}
+          validate={validateConfirmPassword}
         />
 
-        {error && (
-          <p className="text-destructive text-xs">
-            {error}
-          </p>
-        )}
+        {serverError && (
+          <Alert variant="destructive">
+            <AlertCircle size={16} />
+            <AlertDescription>{serverError}</AlertDescription>
+          </Alert>
+        )} 
+
+        {
+          usuarioCreado && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">¡Cuenta creada exitosamente!</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <p><span className="font-medium">Nombre:</span> {usuarioCreado.name}</p>
+              <p><span className="font-medium">Email:</span> {usuarioCreado.email}</p>
+              <Link href="/login" className="block mt-4 text-primary font-semibold hover:underline">
+                Iniciá sesión
+              </Link>
+            </CardContent>
+          </Card>
+          )
+        }
 
         <button
           aria-label="crear cuenta"
           type="submit"
-          disabled={loading}
+          disabled={contieneErrores(errors) || !camposCompletos({ name, email, password, confirmPassword })}
           className="w-full bg-foreground text-primary-foreground py-3.5 rounded-xl font-semibold text-sm tracking-wide hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
         >
-          {loading ? "Creando cuenta..." : "Crear cuenta →"}
+          Crear cuenta
         </button>
 
       </form>
@@ -92,7 +113,7 @@ export default function RegisterForm() {
         ¿Ya tenés cuenta?
         <Link
           href="/login"
-          className="text-primary font-semibold hover:underline"
+          className="text-primary font-semibold hover:underline ml-1"
         >
           Iniciá sesión
         </Link>

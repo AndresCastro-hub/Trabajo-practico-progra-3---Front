@@ -1,3 +1,5 @@
+import { INestError } from "@/interface/apiResponse"
+
 interface ILoginCredenciales {
     email: string
     password: string
@@ -15,13 +17,15 @@ export async function loginService({ email, password }: ILoginCredenciales): Pro
             body: JSON.stringify({ email, password })
         })
 
-        const data = await response.json()
-
         if (!response.ok) {
-            throw new Error(data.message || "Error en login");
+            const error: INestError = await response.json();
+            const message = Array.isArray(error.message) ? error.message[0] : error.message;
+            throw new Error(message || "Error en login");
         }
 
-        return data;
+        const data: LoginResponse = await response.json()
+
+        return data
 
     } catch (error) {
         if (error instanceof Error) {
