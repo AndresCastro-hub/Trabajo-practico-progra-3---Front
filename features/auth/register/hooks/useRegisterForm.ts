@@ -50,5 +50,5 @@ export function useRegisterForm() {
         }
     };
 
-    return { name, email, password, confirmPassword, serverError, usuarioCreado, handleSubmit, setNombre, setEmail, setPassword, confirm, setConfirmPassword };
+    return { name, email, password, confirmPassword, serverError, usuarioCreado, handleSubmit, setNombre, setEmail, setPassword, setConfirmPassword };
 }
