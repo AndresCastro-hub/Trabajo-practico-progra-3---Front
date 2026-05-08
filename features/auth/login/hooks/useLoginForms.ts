@@ -27,7 +27,7 @@ export function useLoginForm() {
 
         try {
             const data = await loginService({ email, password });
-            document.cookie = `token=${data.access_token}; path=/; SameSite=Strict`
+            document.cookie = `token=${data.accessToken}; path=/; SameSite=Strict`
             router.push("/calendario");
 
         } catch (error) {

@@ -6,7 +6,7 @@ interface ILoginCredenciales {
 }
 
 interface LoginResponse {
-    access_token: string
+    accessToken: string
 }
 
 export async function loginService({ email, password }: ILoginCredenciales): Promise<LoginResponse> {

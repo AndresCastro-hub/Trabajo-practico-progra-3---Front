@@ -11,11 +11,11 @@ describe("loginService", () => {
     afterEach(() => jest.resetAllMocks());
 
     it("retorna el access_token si el request es correcto", async () => {
-        mockFetch({ access_token: "token123" });
+        mockFetch({ accessToken: "token123" });
 
         const result = await loginService({ email: "test@email.com", password: "12345678" });
 
-        expect(result.access_token).toBe("token123");
+        expect(result.accessToken).toBe("token123");
     });
 
     it("lanza error con el mensaje del servidor si response no es ok", async () => {
@@ -33,7 +33,7 @@ describe("loginService", () => {
     });
 
     it("hace un fetch con el método POST y los headers correctos", async () => {
-        mockFetch({ access_token: "token123" });
+        mockFetch({ accessToken: "token123" });
 
         await loginService({ email: "test@email.com", password: "12345678" });
 

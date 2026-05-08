@@ -7,14 +7,9 @@ interface JwtPayload {
   id: number
   email: string
   name: string
-  rolId: number  
+  rol: string  
   iat: number
   exp: number
-}
-
-export const roleMap: Record<number, IRole> = {
-    1: "admin",
-  2: "usuario",
 }
 
 function getTokenFromCookie(): string | null {
@@ -36,7 +31,7 @@ export function useAuth() {
     try {
       const decoded = jwtDecode<JwtPayload>(token)
       setUser(decoded)
-      setRole(roleMap[decoded.rolId] ?? null)
+      setRole(decoded.rol as IRole ?? null)
     } catch {
       setUser(null)
       setRole(null)

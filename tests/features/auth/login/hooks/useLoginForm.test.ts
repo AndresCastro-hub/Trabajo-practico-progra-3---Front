@@ -48,7 +48,7 @@ describe("useLoginForm", () => {
     });
 
     it("no setea serverError si el servicio es exitoso", async () => {
-        mockLoginService.mockResolvedValue({ access_token: "token123" });
+        mockLoginService.mockResolvedValue({ accessToken: "token123" });
         Object.defineProperty(document, "cookie", { writable: true, value: "" });
 
         const { result } = renderHook(() => useLoginForm());
