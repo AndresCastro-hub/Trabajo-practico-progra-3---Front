@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode"
 import { NextRequest, NextResponse } from "next/server"
 
 const routeRoles: Record<string, string[]> = {
-  "/admin": ["admin"],
+  "/admin": ["administrador"],
 }
 
 export function middleware(request: NextRequest) {
