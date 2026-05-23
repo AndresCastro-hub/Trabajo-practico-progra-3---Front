@@ -1,21 +1,20 @@
 "use client";
 import InputField  from "@/components/InputField";
-import { Carrot } from "lucide-react";
+import { AlertCircle, Carrot } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNuevoIngrediente } from "../../hooks/useNuevoIngrediente";
+import { useIngredientValidation } from "../../hooks/useIngredientsValidation";
 
 export default function IngredientesForm() {
     const unidades = [
-        { value: "gr", label: "Gramos (gr)" },
-        { value: "kg", label: "Kilogramos (kg)" },
-        { value: "l", label: "Litros (L)" },
-        { value: "ml", label: "Mililitros (mL)" },
+        { value: "g", label: "Gramos (G)" },
+        { value: "ml", label: "Mililitros (ml)" },
         { value: "u", label: "Unidades (U)" },
-        { value: "taza", label: "Tazas" },
-        { value: "cdta", label: "Cucharadita (cdta)" },
     ];
 
-    const { nuevoIngrediente, setNuevoIngrediente, nuevaUnidad, setNuevaUnidad, handleNewIngrediente } = useNuevoIngrediente();
+    const { nuevoIngrediente, setNuevoIngrediente, nuevaUnidad, setNuevaUnidad, isIngredientCreated, serverError, handleNewIngrediente } = useNuevoIngrediente();
+    const { errors, validateNombre } = useIngredientValidation(nuevoIngrediente, nuevaUnidad);
 
     return (
         <form onSubmit={handleNewIngrediente} className="space-y-5">
@@ -27,8 +26,8 @@ export default function IngredientesForm() {
                 placeholder="Ej: Tomate"
                 value={nuevoIngrediente}
                 onChange={setNuevoIngrediente}
-                validate={() => {}}
-                error={null}
+                validate={validateNombre}
+                error={errors.nombre}
                 icon={<Carrot size={16} />}
             />
 
@@ -50,10 +49,28 @@ export default function IngredientesForm() {
                 </Select>
             </div>
 
+            {serverError && (
+                <Alert variant="destructive">
+                    <AlertCircle size={16} />
+                    <AlertDescription>{serverError}</AlertDescription>
+                </Alert>
+            )} 
+
+            {isIngredientCreated && (
+                <Alert variant="default">
+                    <AlertCircle size={16}  color="#29c02cda" />
+                    <AlertDescription>
+                        <p className="text-green-600">
+                            Ingrediente creado: Nombre: {isIngredientCreated.nombre}, Unidad: {isIngredientCreated.unidad}
+                        </p>
+                    </AlertDescription>
+                </Alert>
+            )}
+
             <button
                 aria-label="crear ingrediente"
                 type="submit"
-                //disabled={contieneErrores(errors) || !camposCompletos({ name, email, password, confirmPassword })}
+                disabled={!!errors.nombre || !nuevoIngrediente || !nuevaUnidad}
                 className="w-full bg-foreground text-primary-foreground py-3.5 rounded-xl font-semibold text-sm tracking-wide hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
             >
                 Crear ingrediente

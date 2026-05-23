@@ -2,8 +2,10 @@
 import { Tabs, TabsContent, TabsList,TabsTrigger } from "@/components/ui/tabs"
 import { BookOpenText, Carrot, UsersRound } from "lucide-react";
 import IngredientesTab from "./ingredientes/IngredientesTab";
+import { useIngredientsSearch } from "../hooks/useIngredientsSearch";
 
 export default function AdminTabs() {
+    const { busqueda, setBusqueda, pagina, setPagina, resultados } = useIngredientsSearch();
     return (
         <Tabs defaultValue="recetas-globales" className="w-full">
             <TabsList className="h-11 py-5 rounded-xl ml-4">
@@ -17,7 +19,13 @@ export default function AdminTabs() {
             </TabsContent>
 
             <TabsContent value="ingredientes">
-                <IngredientesTab />
+                <IngredientesTab 
+                    busqueda={busqueda}
+                    setBusqueda={setBusqueda}
+                    pagina={pagina}
+                    setPagina={setPagina}
+                    resultados={resultados}
+                />
             </TabsContent>
 
             <TabsContent value="usuarios">
