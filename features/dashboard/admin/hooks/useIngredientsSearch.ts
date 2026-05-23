@@ -7,16 +7,26 @@ export function useIngredientsSearch() {
     const [busqueda, setBusqueda] = useState<string>("");
     const [pagina, setPagina] = useState<number>(0);
     const [resultados, setResultados] = useState<IIngredientResponse[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const timer = setTimeout(async () => {
-            const offset = pagina * LIMITE_POR_PAGINA;
-            const data = await getIngredients(LIMITE_POR_PAGINA, offset);
-            setResultados(data);
+            try{
+                const offset = pagina * LIMITE_POR_PAGINA;
+                const data = await getIngredients(LIMITE_POR_PAGINA, offset);
+                setResultados(data);
+                setError(null);
+            } catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError("Error inesperado");
+                }
+            }
         }, 300);
 
         return () => clearTimeout(timer);
     }, [busqueda, pagina]);
 
-    return { busqueda, setBusqueda, pagina, setPagina, resultados };
+    return { busqueda, setBusqueda, pagina, setPagina, resultados, error };
 }

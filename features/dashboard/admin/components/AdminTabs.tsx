@@ -5,7 +5,7 @@ import IngredientesTab from "./ingredientes/IngredientesTab";
 import { useIngredientsSearch } from "../hooks/useIngredientsSearch";
 
 export default function AdminTabs() {
-    const { busqueda, setBusqueda, pagina, setPagina, resultados } = useIngredientsSearch();
+    const { busqueda, setBusqueda, pagina, setPagina, resultados, error } = useIngredientsSearch();
     return (
         <Tabs defaultValue="recetas-globales" className="w-full">
             <TabsList className="h-11 py-5 rounded-xl ml-4">
@@ -25,6 +25,7 @@ export default function AdminTabs() {
                     pagina={pagina}
                     setPagina={setPagina}
                     resultados={resultados}
+                    error={error}
                 />
             </TabsContent>
 

@@ -27,8 +27,8 @@ export default function IngredientesTable( {resultados, pagina, setPagina} : { r
                     }
                 </TableBody>
             </Table>
-
-            <div className="flex flex-row justify-center items-center gap-2 p-4">
+            <hr className="border-border" />
+            <div className="flex flex-row justify-around items-center gap-2 p-4">
                 <button
                     className="px-3 py-1 rounded-md bg-primary text-white disabled:bg-muted disabled:text-muted-foreground hover:enabled:bg-primary/90"
                     onClick={() => setPagina(pagina - 1)}
