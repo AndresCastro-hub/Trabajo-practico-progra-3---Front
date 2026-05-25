@@ -17,7 +17,7 @@ export default function TiempoDePreparacion({value, setValue}: IValue) {
                 id="tiempo"
                 type="number"
                 placeholder="30"
-                value={value}
+                 value={value === 0 ? "" : value}
                 onChange={(e) => setValue(Number(e.target.value))}
                 className="h-12 rounded-xl"
             />

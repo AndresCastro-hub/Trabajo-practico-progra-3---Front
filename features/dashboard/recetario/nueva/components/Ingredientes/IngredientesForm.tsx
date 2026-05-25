@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Plus, Trash2 } from "lucide-react"
-import { IngredienteRow } from "../../hooks/useFormCreacionReceta"
 import { Input } from "@/components/ui/input"
 import { SelectorIngrediente } from "./SelectorIngrediente"
+import { IngredienteRow } from "../../types/receta.types"
 
 interface IIngredientesForm {
     agregarIngrediente: () => void
@@ -32,7 +32,7 @@ export default function IngredientesForm({ agregarIngrediente, ingredientes, eli
                 </Button>
             </div>
 
-            <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
+            <div className="border border-slate-200 rounded-2xl overflow-visible bg-white">
 
                 <div className="hidden lg:grid grid-cols-12 gap-4 bg-slate-50 border-b border-slate-200 px-5 py-3 text-sm font-medium text-slate-600">
                     <div className="col-span-8">Ingrediente *</div>

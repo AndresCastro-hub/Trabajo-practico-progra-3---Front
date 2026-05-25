@@ -14,9 +14,9 @@ export default function Header({ title, subtitle, buttons = [] }: IHeader) {
         <header className="bg-gray-50 px-4 md:px-8 py-6">
             <div className="flex items-start justify-between">
                 <div>
-                    <h1 className="text-2xl font-medium text-gray-900">{title}</h1>
+                    <h1 className="text-3xl font-bold text-slate-900">{title}</h1>
                     {subtitle && (
-                        <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
+                        <p className="text-gray-500 mt-0.5">{subtitle}</p>
                     )}
                 </div>
 

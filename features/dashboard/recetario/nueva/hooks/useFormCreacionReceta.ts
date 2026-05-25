@@ -1,35 +1,23 @@
 import { useState } from "react"
-
-
-//Sacar estas interface a un archivos de interface
-interface IForm {
-    nombre: string
-    tiempoDePreparacion: number
-    descripcion: string
-    ingredientes: IngredienteRow[]
-    imagen: File | null
-}
-
-interface Ingrediente {
-    id: number
-    nombre: string
-    unidad: string
-}
-
-export interface IngredienteRow {
-    ingrediente: Ingrediente | null
-    cantidad: string
-}
+import { IForm, IngredienteRow } from "../types/receta.types"
+import { CrearRecetaDTO } from "../types/receta.dto"
+import { crearReceta, subirImagenReceta } from "../services/recetaService"
+import { INestError } from "@/interface/apiResponse"
 
 export default function useFormCreacionReceta() {
 
-    const [form, setForm] = useState<IForm>({
+    const INITIAL_FORM: IForm = {
         nombre: '',
         tiempoDePreparacion: 0,
         descripcion: '',
         ingredientes: [{ ingrediente: null, cantidad: "" }],
         imagen: null
-    })
+    }
+
+    const [form, setForm] = useState<IForm>(INITIAL_FORM)
+    const [error, setError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const setTiempoDePreparacion = (tiempoDePreparacion: number) => {
         setForm((prev) => ({
@@ -76,7 +64,7 @@ export default function useFormCreacionReceta() {
         }))
     }
 
-    const actualizarIngrediente = <K extends keyof IngredienteRow>( index: number, field: K, value: IngredienteRow[K]) => {
+    const actualizarIngrediente = <K extends keyof IngredienteRow>(index: number, field: K, value: IngredienteRow[K]) => {
         setForm((prev) => ({
             ...prev,
             ingredientes: prev.ingredientes.map((item, i) =>
@@ -87,8 +75,46 @@ export default function useFormCreacionReceta() {
         }))
     }
 
-    const handleSubmit = () => {
-       
+    const resetForm = () => { setForm(INITIAL_FORM) }
+
+    const handleSubmit = async () => {
+        setLoading(true)
+        setError(null)
+        setSuccess(false)
+        try {
+            const payload = mapFormToRecetaDTO(form)
+            const receta = await crearReceta(payload)
+            if (imagen) {
+                await subirImagenReceta(receta.id, imagen)
+            }
+            setSuccess(true)
+            resetForm()
+        } catch (e) {
+            const apiError = e as INestError
+            const mensaje = Array.isArray(apiError.message)
+                ? apiError.message.join(", ")
+                : apiError.message ?? "Error inesperado"
+            setError(mensaje)
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    const mapFormToRecetaDTO = (form: IForm): CrearRecetaDTO => {
+        return {
+            nombre: form.nombre,
+            descripcion: form.descripcion,
+            tiempoPreparacion: form.tiempoDePreparacion,
+            ingredientes: form.ingredientes.map((i) => ({
+                ingredient_id: i.ingrediente!.id,
+                cantidad: Number(i.cantidad)
+            }))
+        }
+    }
+
+    const clearFeedback = () => {
+        setError(null)
+        setSuccess(false)
     }
 
     const puedeCrearReceta = () => {
@@ -107,6 +133,7 @@ export default function useFormCreacionReceta() {
 
         return (nombreValido && tiempoValido && imagenValida && ingredientesValidos)
     }
+
     const { nombre, tiempoDePreparacion, descripcion, ingredientes, imagen } = form
 
     return {
@@ -115,6 +142,10 @@ export default function useFormCreacionReceta() {
         descripcion,
         ingredientes,
         imagen,
+        error,
+        success,
+        loading,
+        clearFeedback,
         puedeCrearReceta,
         setImagen,
         agregarIngrediente,

@@ -10,7 +10,7 @@ export default function Descripcion({ value, setValue }: IValue) {
     return (
         <>
             <Label htmlFor="descripcion">
-                Descripción <span className="text-slate-400 font-normal">(Opcional)</span>
+                Descripción
             </Label>
             <Textarea
                 id="descripcion"
