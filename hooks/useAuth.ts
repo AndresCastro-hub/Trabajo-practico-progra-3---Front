@@ -12,7 +12,7 @@ interface JwtPayload {
   exp: number
 }
 
-function getTokenFromCookie(): string | null {
+export function getTokenFromCookie(): string | null {
   return document?.cookie
     .split("; ")
     .find(row => row.startsWith("token="))

@@ -34,10 +34,10 @@ describe("registerService", () => {
     });
 
     it("lanza el primer mensaje si el servidor devuelve un array de mensajes", async () => {
-        mockFetch({ statusCode: 400, message: ["El email es obligatorio", "El nombre es requerido"], error: "Bad Request" }, false);
+        mockFetch({ statusCode: 400, message: ["El email es requerido", "El nombre es requerido"], error: "Bad Request" }, false);
 
         await expect(registerService({ email: "", name: "", password: "" }))
-            .rejects.toThrow("El email es obligatorio");
+            .rejects.toThrow("El email es requerido");
     });
 
     it("llama a fetch con el método POST y los headers correctos", async () => {

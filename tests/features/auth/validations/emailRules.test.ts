@@ -3,7 +3,7 @@ import { validate } from "@/lib/utils/validate";
 
 describe("emailRules", () => {
     it("retorna error si el email está vacío", () => {
-        expect(validate("", emailRules)).toBe("El email es obligatorio");
+        expect(validate("", emailRules)).toBe("El email es requerido");
     });
 
     it("retorna error si el email no tiene @", () => {
