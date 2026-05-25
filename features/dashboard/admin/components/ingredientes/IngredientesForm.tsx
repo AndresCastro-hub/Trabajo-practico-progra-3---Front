@@ -3,7 +3,7 @@ import InputField  from "@/components/InputField";
 import { AlertCircle, Carrot } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useNuevoIngrediente } from "../../hooks/useNuevoIngrediente";
+import { useNewIngredient } from "../../hooks/useNewIngredient";
 import { useIngredientValidation } from "../../hooks/useIngredientsValidation";
 
 export default function IngredientesForm() {
@@ -13,7 +13,7 @@ export default function IngredientesForm() {
         { value: "u", label: "Unidades (U)" },
     ];
 
-    const { nuevoIngrediente, setNuevoIngrediente, nuevaUnidad, setNuevaUnidad, isIngredientCreated, serverError, handleNewIngrediente } = useNuevoIngrediente();
+    const { nuevoIngrediente, setNuevoIngrediente, nuevaUnidad, setNuevaUnidad, isIngredientCreated, serverError, handleNewIngrediente } = useNewIngredient();
     const { errors, validateNombre } = useIngredientValidation(nuevoIngrediente, nuevaUnidad);
 
     return (

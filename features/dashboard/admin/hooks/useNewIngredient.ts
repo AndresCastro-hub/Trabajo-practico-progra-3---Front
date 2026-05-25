@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { postIngredient } from "../services/ingredientService";
 
-export function useNuevoIngrediente() {
+export function useNewIngredient() {
     const [nuevoIngrediente, setNuevoIngrediente] = useState<string>("");
     const [nuevaUnidad, setNuevaUnidad] = useState<string>("");
     const [serverError, setServerError] = useState<string | null>(null);
