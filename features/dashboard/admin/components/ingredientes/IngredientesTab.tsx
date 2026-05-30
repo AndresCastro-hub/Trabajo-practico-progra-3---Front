@@ -5,10 +5,10 @@ import { AlertCircle } from "lucide-react";
 import { useIngredientsSearch } from "../../hooks/useIngredientsSearch";
 
 export default function IngredientesTab() {
-    const { busqueda, pagina, setPagina, resultados, error, handleSearch } = useIngredientsSearch();
+    const { pagina, setPagina, resultados, error, handleSearch } = useIngredientsSearch();
     return (
         <>
-            <IngredientesHeader  busqueda={busqueda} handleSearch={handleSearch} />
+            <IngredientesHeader handleSearch={handleSearch} />
             <IngredientesTable resultados={resultados} pagina={pagina} setPagina={setPagina} />
             {error && (
                 <Alert variant="destructive">

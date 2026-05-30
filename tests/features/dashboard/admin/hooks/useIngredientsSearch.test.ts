@@ -44,8 +44,7 @@ describe("useIngredientsSearch", () => {
 
         await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
 
-        act(() => result.current.setBusqueda("Tomate"));
-        act(() => result.current.handleSearch());
+        act(() => result.current.handleSearch("Tomate"));
 
         await waitFor(() => {
             expect(mockGetIngredients).toHaveBeenCalledWith(10, 0, "Tomate");
@@ -60,7 +59,7 @@ describe("useIngredientsSearch", () => {
         act(() => result.current.setPagina(3));
         await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(2));
 
-        act(() => result.current.handleSearch());
+        act(() => result.current.handleSearch(""));
 
         await waitFor(() => {
             expect(result.current.pagina).toBe(0);

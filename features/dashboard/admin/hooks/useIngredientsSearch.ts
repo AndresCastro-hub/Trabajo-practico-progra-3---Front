@@ -29,7 +29,7 @@ export function useIngredientsSearch() {
         fetchIngredients()
     }, [fetchIngredients])
 
-    const handleSearch = () => {
+    const handleSearch = (busqueda: string) => {
         setPagina(0)
         setBusquedaConfirmada(busqueda)
     }
