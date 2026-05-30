@@ -29,16 +29,6 @@ describe("useIngredientsSearch", () => {
         expect(mockGetIngredients).toHaveBeenCalledWith(10, 0, "");
     });
 
-    it("no hace fetch al escribir en busqueda sin confirmar", async () => {
-        const { result } = renderHook(() => useIngredientsSearch());
-
-        await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
-
-        act(() => result.current.setBusqueda("Tom"));
-
-        expect(mockGetIngredients).toHaveBeenCalledTimes(1);
-    });
-
     it("hace fetch con busquedaConfirmada al llamar handleSearch", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 

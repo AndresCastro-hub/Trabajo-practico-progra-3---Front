@@ -4,7 +4,6 @@ import { getIngredients, IIngredientResponse } from "../services/ingredientServi
 export const LIMITE_POR_PAGINA = 10;
 
 export function useIngredientsSearch() {
-    const [busqueda, setBusqueda] = useState<string>("");
     const [busquedaConfirmada, setBusquedaConfirmada] = useState("")
     const [pagina, setPagina] = useState<number>(0);
     const [resultados, setResultados] = useState<IIngredientResponse[]>([]);
@@ -34,5 +33,5 @@ export function useIngredientsSearch() {
         setBusquedaConfirmada(busqueda)
     }
 
-    return { busqueda, setBusqueda, pagina, setPagina, resultados, error, handleSearch };
+    return { pagina, setPagina, resultados, error, handleSearch };
 }
