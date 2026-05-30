@@ -1,8 +1,12 @@
 import { Clock, Flame } from "lucide-react"
 import Image from "next/image"
 import { IReceta } from "../types/recetario.types"
+import { useModoControl } from "@/context/ModoControlContext"
 
 export default function RecipeCard({ recipe }: { recipe: IReceta }) {
+
+    const { modoControl } = useModoControl()
+
     return (
         <article className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
             <div className="relative h-48 overflow-hidden">
@@ -12,10 +16,15 @@ export default function RecipeCard({ recipe }: { recipe: IReceta }) {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
-                    <Flame className="w-3.5 h-3.5 text-green-500" />
-                    {recipe.calorias} kcal
-                </div>
+                {
+                    modoControl && (
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                            <Flame className="w-3.5 h-3.5 text-green-500" />
+                            {recipe.calorias} kcal
+                        </div>
+                    )
+                }
+
             </div>
 
             <div className="p-4">

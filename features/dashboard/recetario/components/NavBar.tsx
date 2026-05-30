@@ -1,5 +1,6 @@
 import { Activity, Search } from "lucide-react"
 import { ActiveTab } from "../types/recetario.types"
+import { useModoControl } from "@/context/ModoControlContext"
 
 interface INavBar {
     handleTabChange: (e: ActiveTab) => void
@@ -9,10 +10,7 @@ interface INavBar {
 
 export default function NavBar({ activeTab, handleTabChange, onSearch }: INavBar) {
 
-    const modoControl = false
-    const onToggleModoControl = () => {
-        //logica 
-    }
+    const { modoControl, onToggleModoControl } = useModoControl()
 
     return (
         <nav className="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between gap-4">
@@ -31,11 +29,10 @@ export default function NavBar({ activeTab, handleTabChange, onSearch }: INavBar
             <div className="flex items-center gap-2">
                 <button
                     onClick={onToggleModoControl}
-                    className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border transition-all ${
-                        modoControl
+                    className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border transition-all ${modoControl
                             ? "bg-green-50 border-green-200 text-green-700"
                             : "bg-gray-100 border-gray-200 text-gray-500"
-                    }`}
+                        }`}
                 >
                     <Activity className={`w-4 h-4 ${modoControl ? "text-green-500" : "text-gray-400"}`} />
                     Modo control {modoControl ? "ON" : "OFF"}
@@ -47,7 +44,7 @@ export default function NavBar({ activeTab, handleTabChange, onSearch }: INavBar
                         className={`text-sm font-semibold px-4 py-1.5 rounded-full transition-all ${activeTab === "plataforma"
                             ? "bg-white text-gray-900 shadow-sm"
                             : "text-gray-500 hover:text-gray-700"
-                        }`}
+                            }`}
                     >
                         Plataforma
                     </button>
@@ -56,7 +53,7 @@ export default function NavBar({ activeTab, handleTabChange, onSearch }: INavBar
                         className={`text-sm font-semibold px-4 py-1.5 rounded-full transition-all ${activeTab === "mis-recetas"
                             ? "bg-white text-gray-900 shadow-sm"
                             : "text-gray-500 hover:text-gray-700"
-                        }`}
+                            }`}
                     >
                         Mis Recetas
                     </button>
