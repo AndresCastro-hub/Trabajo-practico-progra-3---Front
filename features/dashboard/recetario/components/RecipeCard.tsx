@@ -2,13 +2,19 @@ import { Clock, Flame } from "lucide-react"
 import Image from "next/image"
 import { IReceta } from "../types/recetario.types"
 import { useModoControl } from "@/context/ModoControlContext"
+import { useRouter } from "next/navigation"
 
 export default function RecipeCard({ recipe }: { recipe: IReceta }) {
 
     const { modoControl } = useModoControl()
+    const router = useRouter()
+
+    const redirigirAlDetalle = () => {
+        router.push(`/recetario/${recipe.id}`)
+    }
 
     return (
-        <article className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
+        <article onClick={redirigirAlDetalle} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
             <div className="relative h-48 overflow-hidden">
                 <Image
                     src={recipe.imagen_url}
