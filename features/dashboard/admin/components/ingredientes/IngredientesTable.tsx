@@ -2,7 +2,13 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { LIMITE_POR_PAGINA } from "../../hooks/useIngredientsSearch";
 
-export default function IngredientesTable( {resultados, pagina, setPagina} : { resultados: { nombre: string, unidad: string }[], pagina: number, setPagina: (pagina: number) => void } ) {
+interface IIngredientTableProps {
+    resultados: { nombre: string, unidad: string }[],
+    pagina: number,
+    setPagina: (pagina: number) => void
+}
+
+export default function IngredientesTable( {resultados, pagina, setPagina} : IIngredientTableProps ) {
     return (
         <div className="m-4 rounded-xl border border-border overflow-hidden">
             <Table>
@@ -20,8 +26,8 @@ export default function IngredientesTable( {resultados, pagina, setPagina} : { r
                     {
                         resultados.map((ingrediente) => (
                             <TableRow key={ingrediente.nombre} className="hover:bg-muted/30">
-                                <TableCell className="font-medium">{ingrediente.nombre}</TableCell>
-                                <TableCell className="text-muted-foreground">{ingrediente.unidad}</TableCell>
+                                <TableCell className="font-medium w-1/2">{ingrediente.nombre}</TableCell>
+                                <TableCell className="text-muted-foreground w-1/2">{ingrediente.unidad}</TableCell>
                             </TableRow>
                         ))
                     }

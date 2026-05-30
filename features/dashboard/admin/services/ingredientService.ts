@@ -1,4 +1,5 @@
 import { INestError } from "@/interface/apiResponse";
+import { getTokenFromCookie } from "@/hooks/useAuth"
 
 interface IIngredientService {
     nombre: string;
@@ -12,15 +13,10 @@ export interface IIngredientResponse {
 }
 
 export async function postIngredient({ nombre, unidad }: IIngredientService): Promise<IIngredientResponse> {
-    const token:string | undefined = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        ?.split('=')[1];
-
     try {
         const response = await fetch('http://localhost:5000/ingredients', {
             method: 'POST',
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getTokenFromCookie()}` },
             body: JSON.stringify({ nombre, unidad })
         })
 
@@ -43,16 +39,17 @@ export async function postIngredient({ nombre, unidad }: IIngredientService): Pr
     }
 }
 
-export async function getIngredients(limit: number = 10, offset: number = 0): Promise<IIngredientResponse[]> {
-    const token:string | undefined = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        ?.split('=')[1];
+export async function getIngredients(limit: number = 10, offset: number = 0, nombre?: string): Promise<IIngredientResponse[]> {
+    const params = new URLSearchParams({
+        limit: String(limit),
+        offset: String(offset),
+        ...(nombre ? { nombre } : {}),
+    })
 
     try {
-        const response = await fetch(`http://localhost:5000/ingredients?limit=${limit}&offset=${offset}`, {
+        const response = await fetch(`http://localhost:5000/ingredients?${params.toString()}`, {
             method: 'GET',
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getTokenFromCookie()}` },
         })
 
         if (!response.ok) {

@@ -1,32 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getIngredients, IIngredientResponse } from "../services/ingredientService";
 
 export const LIMITE_POR_PAGINA = 10;
 
 export function useIngredientsSearch() {
     const [busqueda, setBusqueda] = useState<string>("");
+    const [busquedaConfirmada, setBusquedaConfirmada] = useState("")
     const [pagina, setPagina] = useState<number>(0);
     const [resultados, setResultados] = useState<IIngredientResponse[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const timer = setTimeout(async () => {
-            try{
-                const offset = pagina * LIMITE_POR_PAGINA;
-                const data = await getIngredients(LIMITE_POR_PAGINA, offset);
-                setResultados(data);
-                setError(null);
-            } catch (error) {
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError("Error inesperado");
-                }
+    const fetchIngredients = useCallback(async () => {
+        try {
+            const offset = pagina * LIMITE_POR_PAGINA
+            const data = await getIngredients(LIMITE_POR_PAGINA, offset, busquedaConfirmada)
+            setResultados(data)
+            setError(null)
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("Error inesperado");
             }
-        }, 300);
+        }
+    }, [busquedaConfirmada, pagina]);
 
-        return () => clearTimeout(timer);
-    }, [busqueda, pagina]);
+    useEffect(() => {
+        fetchIngredients()
+    }, [fetchIngredients])
 
-    return { busqueda, setBusqueda, pagina, setPagina, resultados, error };
+    const handleSearch = () => {
+        setPagina(0)
+        setBusquedaConfirmada(busqueda)
+    }
+
+    return { busqueda, setBusqueda, pagina, setPagina, resultados, error, handleSearch };
 }

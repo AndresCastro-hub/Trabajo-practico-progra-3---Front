@@ -12,63 +12,70 @@ const mockIngredientes = [
 
 describe("useIngredientsSearch", () => {
     beforeEach(() => {
-        jest.useFakeTimers();
         mockGetIngredients.mockResolvedValue(mockIngredientes);
     });
 
     afterEach(() => {
-        jest.useRealTimers();
         jest.clearAllMocks();
     });
 
     it("hace fetch inicial al montar y carga resultados", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 
-        act(() => jest.advanceTimersByTime(300));
-
         await waitFor(() => {
             expect(result.current.resultados).toEqual(mockIngredientes);
         });
 
-        expect(mockGetIngredients).toHaveBeenCalledWith(10, 0);
+        expect(mockGetIngredients).toHaveBeenCalledWith(10, 0, "");
     });
 
-    it("no hace fetch antes de que pasen 300ms", () => {
-        renderHook(() => useIngredientsSearch());
-
-        act(() => jest.advanceTimersByTime(299));
-
-        expect(mockGetIngredients).not.toHaveBeenCalled();
-    });
-
-    it("resetea el timer si busqueda cambia antes de 300ms", async () => {
+    it("no hace fetch al escribir en busqueda sin confirmar", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 
-        act(() => {jest.advanceTimersByTime(200);});
+        await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
 
         act(() => result.current.setBusqueda("Tom"));
 
-        act(() => {jest.advanceTimersByTime(200);});
+        expect(mockGetIngredients).toHaveBeenCalledTimes(1);
+    });
 
-        expect(mockGetIngredients).not.toHaveBeenCalled();
+    it("hace fetch con busquedaConfirmada al llamar handleSearch", async () => {
+        const { result } = renderHook(() => useIngredientsSearch());
 
-        act(() => jest.advanceTimersByTime(100));
+        await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
+
+        act(() => result.current.setBusqueda("Tomate"));
+        act(() => result.current.handleSearch());
 
         await waitFor(() => {
-            expect(mockGetIngredients).toHaveBeenCalledTimes(1);
+            expect(mockGetIngredients).toHaveBeenCalledWith(10, 0, "Tomate");
+        });
+    });
+
+    it("resetea la página a 0 al llamar handleSearch", async () => {
+        const { result } = renderHook(() => useIngredientsSearch());
+
+        await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
+
+        act(() => result.current.setPagina(3));
+        await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(2));
+
+        act(() => result.current.handleSearch());
+
+        await waitFor(() => {
+            expect(result.current.pagina).toBe(0);
         });
     });
 
     it("calcula el offset correcto según la página", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 
-        act(() => {
-            result.current.setPagina(2);
-            jest.advanceTimersByTime(300);
-        });
+        await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
+
+        act(() => result.current.setPagina(2));
 
         await waitFor(() => {
-            expect(mockGetIngredients).toHaveBeenCalledWith(10, 20);
+            expect(mockGetIngredients).toHaveBeenCalledWith(10, 20, "");
         });
     });
 
@@ -76,8 +83,6 @@ describe("useIngredientsSearch", () => {
         mockGetIngredients.mockRejectedValue(new Error("Error de red"));
 
         const { result } = renderHook(() => useIngredientsSearch());
-
-        act(() => jest.advanceTimersByTime(300));
 
         await waitFor(() => {
             expect(result.current.error).toBe("Error de red");
