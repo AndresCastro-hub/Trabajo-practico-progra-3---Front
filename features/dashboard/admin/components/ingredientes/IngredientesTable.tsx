@@ -2,7 +2,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { LIMITE_POR_PAGINA } from "../../hooks/useIngredientsSearch";
 
-export default function IngredientesTable( {resultados, pagina, setPagina} : { resultados: { nombre: string, unidad: string }[], pagina: number, setPagina: (pagina: number) => void } ) {
+export default function IngredientesTable( {ingredientes, pagina, setPagina} : { ingredientes: { nombre: string, unidad: string }[], pagina: number, setPagina: (pagina: number) => void } ) {
     return (
         <div className="m-4 rounded-xl border border-border overflow-hidden">
             <Table>
@@ -18,7 +18,7 @@ export default function IngredientesTable( {resultados, pagina, setPagina} : { r
                 </TableHeader>
                 <TableBody>
                     {
-                        resultados.map((ingrediente) => (
+                        ingredientes.map((ingrediente) => (
                             <TableRow key={ingrediente.nombre} className="hover:bg-muted/30">
                                 <TableCell className="font-medium">{ingrediente.nombre}</TableCell>
                                 <TableCell className="text-muted-foreground">{ingrediente.unidad}</TableCell>
@@ -38,13 +38,13 @@ export default function IngredientesTable( {resultados, pagina, setPagina} : { r
                 </button>
 
                 <span className="text-sm text-muted-foreground">
-                    página {pagina + 1} de {Math.ceil(resultados.length / LIMITE_POR_PAGINA)}
+                    página {pagina + 1} de {Math.ceil(ingredientes.length / LIMITE_POR_PAGINA)}
                 </span>
 
                 <button
                     className="px-3 py-1 rounded-md bg-primary text-white disabled:bg-muted disabled:text-muted-foreground hover:enabled:bg-primary/90"
                     onClick={() => setPagina(pagina + 1)}
-                    disabled={resultados.length < LIMITE_POR_PAGINA}
+                    disabled={ingredientes.length < LIMITE_POR_PAGINA}
                 >
                     Siguiente
                 </button>
