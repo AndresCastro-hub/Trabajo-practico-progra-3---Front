@@ -1,3 +1,4 @@
+import { useModoControl } from "@/context/ModoControlContext";
 import { useAuth } from "@/hooks/useAuth";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -5,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function CardUser() {
 
     const router = useRouter()
+    const {modoControl} = useModoControl()
     const { user } = useAuth()
 
     const handleLogout = () => {
@@ -33,7 +35,7 @@ export default function CardUser() {
                         {user?.name}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                        Modo control activo
+                        Modo Control {modoControl ?  'Activo' : 'Inactivo'}
                     </p>
                 </div>
             </div>
