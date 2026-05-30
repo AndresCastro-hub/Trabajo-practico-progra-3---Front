@@ -11,7 +11,7 @@ interface IHeader {
 
 export default function Header({ title, subtitle, buttons = [] }: IHeader) {
     return (
-        <header className="bg-gray-50 px-4 md:px-8 py-6">
+        <header className="bg-white px-4 md:px-8 py-6">
             <div className="flex items-start justify-between">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900">{title}</h1>
