@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import useRecetario from "@/features/dashboard/recetario/hooks/useRecetario";
 import Pagination from "@/features/dashboard/recetario/components/Pagination";
-import { useMemo } from "react";
+
+const columnas: IColumn<IReceta>[] = [
+    { header: "Nombre", render: (receta) => <span>{receta.nombre}</span> },
+    { header: "Calorías", render: (receta) => <span>{receta.calorias} kcal</span>, className: "text-center" },
+    { header: "Tiempo de Preparación", render: (receta) => <span>{receta.tiempoPreparacion} min</span>, className: "text-center" },
+    { header: "Ingredientes", render: (/*receta*/) => <span>{8/*recetas.ingredientes.length*/}</span>, className: "text-center" },
+];
 
 export default function RecetasTab() {
     const router = useRouter();
@@ -16,13 +22,6 @@ export default function RecetasTab() {
             + Nueva Receta Global
         </Button>
     );
-
-    const columnas: IColumn<IReceta>[] = useMemo(() => [
-        { header: "Nombre", render: (receta) => <span>{receta.nombre}</span> },
-        { header: "Calorías", render: (receta) => <span>{receta.calorias} kcal</span>, className: "text-center" },
-        { header: "Tiempo de Preparación", render: (receta) => <span>{receta.tiempoPreparacion} min</span>, className: "text-center" },
-        { header: "Ingredientes", render: () => <span>{8/*recetas.ingredientes.length*/}</span>, className: "text-center" },
-    ], []);
     
     return (
         <>
