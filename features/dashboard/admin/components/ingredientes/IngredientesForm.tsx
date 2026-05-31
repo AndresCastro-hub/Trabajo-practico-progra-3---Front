@@ -1,5 +1,5 @@
 "use client";
-import InputField  from "@/components/InputField";
+import InputField  from "@/features/auth/components/InputField";
 import { AlertCircle, Carrot } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert";
