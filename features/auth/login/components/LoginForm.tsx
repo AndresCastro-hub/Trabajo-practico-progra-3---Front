@@ -1,6 +1,6 @@
 "use client";
 import { Mail, Lock, AlertCircle } from "lucide-react";
-import InputField from "../../../../components/InputField";
+import InputField from "../../components/InputField";
 import { useLoginForm } from "../hooks/useLoginForms";
 import Link from "next/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";

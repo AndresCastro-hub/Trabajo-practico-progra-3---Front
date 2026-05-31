@@ -8,7 +8,7 @@ describe("useLoginValidation", () => {
 
             act(() => { result.current.validateEmail("") });
 
-            expect(result.current.errors.email).toBe("El email es obligatorio");
+            expect(result.current.errors.email).toBe("El email es requerido");
         });
 
         it("setea error si el formato de email es inválido", () => {
