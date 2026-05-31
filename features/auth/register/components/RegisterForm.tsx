@@ -2,7 +2,7 @@
 
 import { Mail, Lock, User, AlertCircle } from "lucide-react";
 import { useRegisterForm } from "../hooks/useRegisterForm";
-import InputField from "../../../../components/InputField";
+import InputField from "../../components/InputField";
 import Link from "next/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRegisterValidation } from "../hooks/useRegisterValidation";
