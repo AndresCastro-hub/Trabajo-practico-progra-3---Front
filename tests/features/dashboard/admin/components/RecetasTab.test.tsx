@@ -17,7 +17,7 @@ const mockUseRecetario = {
         { nombre: "Bowl de salmón", calorias: 420, tiempoPreparacion: 25 },
         { nombre: "Milanesa", calorias: 500, tiempoPreparacion: 30 },
     ] as IReceta[],
-    actualPage: 1,
+    actualPage: 0,
     totalPages: 3,
     total: 30,
     activeTab: "recetas" as ActiveTab,

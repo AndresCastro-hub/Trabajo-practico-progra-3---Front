@@ -4,11 +4,11 @@ import * as useUsersSearchModule from "@/features/dashboard/admin/hooks/useUsers
 
 const mockUseUsersSearch = {
     usuarios: [
-        { id: 1, name: "Elena Martín", email: "elena@test.com", rolName: "administrador" },
-        { id: 2, name: "Juan Pérez", email: "juan@test.com", rolName: "usuario" },
+        { id: 4, name: "Elena Martín", email: "elena@test.com", rolName: "administrador" },
+        { id: 5, name: "Juan Pérez", email: "juan@test.com", rolName: "usuario" },
     ],
-    totalUsers: 2,
-    totalPages: 1,
+    totalUsers: 20,
+    totalPages: 2,
     actualPage: 0,
     loading: false,
     error: null,
