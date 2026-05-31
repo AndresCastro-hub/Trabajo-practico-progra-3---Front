@@ -95,7 +95,7 @@ export default function FormCreacionReceta() {
                     </div>
 
                     <div className="bg-white pt-6 mt-8 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-end gap-3">
-                        <Button onClick={() => router.push('/recetario')} variant="outline" className="rounded-xl h-11 w-full md:w-auto">Cancelar</Button>
+                        <Button onClick={() => router.back()} variant="outline" className="rounded-xl h-11 w-full md:w-auto">Cancelar</Button>
                         <Button disabled={!puedeCrearReceta() || loading} onClick={handleSubmit} className="rounded-xl h-11 bg-green-600 hover:bg-green-700 w-full md:w-auto">
                             Crear receta
                         </Button>
