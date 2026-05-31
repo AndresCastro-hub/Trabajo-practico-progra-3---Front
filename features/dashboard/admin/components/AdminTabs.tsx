@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList,TabsTrigger } from "@/components/ui/tabs"
 import { BookOpenText, Carrot, UsersRound } from "lucide-react";
 import IngredientesTab from "./ingredientes/IngredientesTab";
 import Recetastab from "./recetas/RecetasTab"
+import UsuariosTab from "./usuarios/UsuariosTab";
 
 export default function AdminTabs() {
     return (
@@ -22,7 +23,7 @@ export default function AdminTabs() {
             </TabsContent>
 
             <TabsContent value="usuarios">
-                <p>Acá irá el panel de usuarios</p>
+                <UsuariosTab />
             </TabsContent>
         </Tabs>
     )

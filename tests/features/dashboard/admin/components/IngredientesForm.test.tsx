@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent  } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import IngredientesForm from "@/features/dashboard/admin/components/ingredientes/IngredientesForm";
 import * as useNewIngredientModule from "@/features/dashboard/admin/hooks/useNewIngredient";
@@ -106,12 +106,12 @@ describe("IngredientesForm - interacciones", () => {
     });
 
     it("llama a handleNewIngrediente al hacer submit", async () => {
-        const user = userEvent.setup();
         jest.spyOn(useNewIngredientModule, "useNewIngredient")
-            .mockReturnValue({ ...mockUseNewIngredient, nuevoIngrediente: "Tomate", nuevaUnidad: "g" });
+        .mockReturnValue({ ...mockUseNewIngredient, nuevoIngrediente: "Tomate", nuevaUnidad: "g" });
 
         render(<IngredientesForm />);
-        await user.click(screen.getByRole("button", { name: /crear ingrediente/i }));
+        
+        fireEvent.submit(screen.getByRole("button", { name: /crear ingrediente/i }));
 
         expect(mockUseNewIngredient.handleNewIngrediente).toHaveBeenCalled();
     });
