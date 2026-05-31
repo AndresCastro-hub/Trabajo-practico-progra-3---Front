@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode"
 import { NextRequest, NextResponse } from "next/server"
 
 const routeRoles: Record<string, string[]> = {
-  "/admin": ["admin"],
+  "/admin": ["administrador"],
 }
 
 export function middleware(request: NextRequest) {
@@ -15,7 +15,11 @@ export function middleware(request: NextRequest) {
   }
 
   if (token && isLoginPage) {
-    return NextResponse.redirect(new URL("/calendario", request.url))
+    const decoded = jwtDecode<{ rol: string }>(token)
+    if(decoded.rol === "administrador"){
+      return NextResponse.redirect(new URL("/admin", request.url))
+    }
+    return NextResponse.redirect(new URL("/calendario", request.url));
   }
 
   if (token) {
