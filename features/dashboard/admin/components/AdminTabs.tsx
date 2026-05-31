@@ -18,7 +18,7 @@ export default function AdminTabs() {
             </TabsContent>
 
             <TabsContent value="ingredientes">
-                <IngredientesTab />
+                <IngredientesTab/>
             </TabsContent>
 
             <TabsContent value="usuarios">

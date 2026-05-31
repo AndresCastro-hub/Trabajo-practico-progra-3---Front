@@ -15,7 +15,11 @@ export function middleware(request: NextRequest) {
   }
 
   if (token && isLoginPage) {
-    return NextResponse.redirect(new URL("/calendario", request.url))
+    const decoded = jwtDecode<{ rol: string }>(token)
+    if(decoded.rol === "administrador"){
+      return NextResponse.redirect(new URL("/admin", request.url))
+    }
+    return NextResponse.redirect(new URL("/calendario", request.url));
   }
 
   if (token) {
