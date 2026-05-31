@@ -1,5 +1,5 @@
 "use client";
-import InputField  from "@/components/InputField";
+import InputField  from "@/features/auth/components/InputField";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
