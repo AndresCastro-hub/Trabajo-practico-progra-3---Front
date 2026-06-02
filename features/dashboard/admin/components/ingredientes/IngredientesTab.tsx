@@ -15,7 +15,10 @@ export default function IngredientesTab() {
                     <AlertCircle size={16} />
                     <AlertDescription>Error al cargar los ingredientes: {error}</AlertDescription>
                 </Alert>
-            )} 
+            )}
+            {/*recetas.length > 0 && (
+                <Pagination current={actualPage} lastPage={Math.ceil(totalPages)} onPageChange={handlePageChange} />
+            )*/}
         </>
     )
 }
