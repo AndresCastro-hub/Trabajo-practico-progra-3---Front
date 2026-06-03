@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react"
-import { IReceta } from "../../types/recetario.types"
+import { IRecetaDetalle } from "../../types/recetario.types"
 import { getRecetaById } from "../service/recetaDetalleService"
 
 const useRecetaDetail = (id: string) => {
-    const [receta, setReceta] = useState<IReceta | null>(null)
+    const [receta, setReceta] = useState<IRecetaDetalle | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
