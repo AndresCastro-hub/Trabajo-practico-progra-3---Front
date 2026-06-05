@@ -1,37 +1,45 @@
 import { useState, useEffect, useCallback } from "react";
-import { getIngredients, IIngredientResponse } from "../services/ingredientService";
-
-export const LIMITE_POR_PAGINA = 10;
+import { getIngredients } from "../services/ingredientService";
+import { IIngredient } from "../types/adminTypes";
 
 export function useIngredientsSearch() {
-    const [busquedaConfirmada, setBusquedaConfirmada] = useState("")
-    const [pagina, setPagina] = useState<number>(0);
-    const [resultados, setResultados] = useState<IIngredientResponse[]>([]);
+    const [filters, setFilters] = useState({
+        page: 1,
+        search: "",
+    });
+    const [ingredientes, setIngredientes] = useState<IIngredient[]>([]);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [total, setTotal] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchIngredients = useCallback(async () => {
+        setLoading(true);
+        setError(null);
         try {
-            const offset = pagina * LIMITE_POR_PAGINA
-            const data = await getIngredients(LIMITE_POR_PAGINA, offset, busquedaConfirmada)
-            setResultados(data)
+            const data = await getIngredients(filters.page, filters.search);
+            setIngredientes(data.ingredients);
+            setTotal(data.totalRecords);
+            setTotalPages(data.totalPages);
             setError(null)
-        } catch (error) {
-            if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError("Error inesperado");
-            }
+        } catch (err: unknown) {
+            setIngredientes([])
+            setTotalPages(0)
+            setError(err instanceof Error ? err.message : "Error al cargar los ingredientes")
+        } finally {
+            setLoading(false);
         }
-    }, [busquedaConfirmada, pagina]);
+    }, [filters]);
 
     useEffect(() => {
         fetchIngredients()
     }, [fetchIngredients])
 
-    const handleSearch = (busqueda: string) => {
-        setPagina(0)
-        setBusquedaConfirmada(busqueda)
-    }
+    const handleSearch = (value: string) =>
+        setFilters(prev => ({ ...prev, search: value, page: 1 }))
 
-    return { pagina, setPagina, resultados, error, handleSearch };
+    const handlePageChange = (page: number) =>
+        setFilters(prev => ({ ...prev, page }))
+
+    return { ingredientes, totalPages, actualPage: filters.page, total, loading, error, handleSearch, handlePageChange };
 }

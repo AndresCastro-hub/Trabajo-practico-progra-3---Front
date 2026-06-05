@@ -1,7 +1,7 @@
 import AdminContentHeader from "../AdminContentHeader";
 import AdminContentTable, { IColumn } from "../AdminContentTable";
 import { IUser } from "../../types/adminTypes";
-import Pagination from "@/features/dashboard/recetario/components/Pagination";
+import Pagination from "@/components/Pagination";
 import { useUsersSearch } from "../../hooks/useUsersSearch";
 
 const columnas: IColumn<IUser>[] = [

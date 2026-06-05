@@ -1,10 +1,9 @@
 import AdminContentHeader from "../AdminContentHeader";
 import AdminContentTable, { IColumn } from "../AdminContentTable";
 import { IReceta } from "@/features/dashboard/recetario/types/recetario.types";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import useRecetario from "@/features/dashboard/recetario/hooks/useRecetario";
-import Pagination from "@/features/dashboard/recetario/components/Pagination";
+import Pagination from "@/components/Pagination";
+import RecetaActionButton from "./RecetaActionButton";
 
 const columnas: IColumn<IReceta>[] = [
     { header: "Nombre", render: (receta) => <span>{receta.nombre}</span> },
@@ -14,18 +13,11 @@ const columnas: IColumn<IReceta>[] = [
 ];
 
 export default function RecetasTab() {
-    const router = useRouter();
     const { recetas, actualPage, totalPages, handlePageChange, handleSearch } = useRecetario();
-
-    const actionButton = (
-        <Button className="h-[50px] px-6" onClick={() => router.push("/recetario/nueva")}>
-            + Nueva Receta Global
-        </Button>
-    );
     
     return (
         <>
-            <AdminContentHeader onSearch={handleSearch} actionButton={actionButton} />
+            <AdminContentHeader onSearch={handleSearch} actionButton={<RecetaActionButton />} />
             <AdminContentTable
                 tableContent={recetas}
                 columns={columnas}
