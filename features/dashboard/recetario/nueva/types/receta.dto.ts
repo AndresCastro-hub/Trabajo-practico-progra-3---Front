@@ -3,7 +3,7 @@ export interface CrearRecetaDTO{
     descripcion: string
     tiempoPreparacion: number
     ingredientes: {
-        ingredient_id: number
+        ingrediente_id: number
         cantidad: number
     }[]
 }

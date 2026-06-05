@@ -21,3 +21,17 @@ export interface IRecetasResponse {
     totalPages: number
     totalRecords: number
 }
+
+export interface IIngredienteDetalle {
+    id: number
+    cantidad: string
+    ingrediente: {
+        id: number
+        nombre: string
+        unidad: string
+    }
+}
+
+export interface IRecetaDetalle extends IReceta {
+    ingredientes: IIngredienteDetalle[]
+}

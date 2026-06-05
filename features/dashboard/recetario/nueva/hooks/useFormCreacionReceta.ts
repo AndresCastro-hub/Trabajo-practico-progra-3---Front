@@ -106,7 +106,7 @@ export default function useFormCreacionReceta() {
             descripcion: form.descripcion,
             tiempoPreparacion: form.tiempoDePreparacion,
             ingredientes: form.ingredientes.map((i) => ({
-                ingredient_id: i.ingrediente!.id,
+                ingrediente_id: i.ingrediente!.id,
                 cantidad: Number(i.cantidad)
             }))
         }
