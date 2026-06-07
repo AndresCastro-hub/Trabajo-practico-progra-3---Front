@@ -2,11 +2,12 @@ import { CheckCircle2, X, XCircle } from "lucide-react"
 
 interface IPantallaNotificacion{
     success: boolean
+    successMessage: string
     error: string | null
     clearFeedback: () => void
 }
 
-export default function PantallaNotificacion({success, error, clearFeedback}: IPantallaNotificacion){
+export default function PantallaNotificacion({success, successMessage, error, clearFeedback}: IPantallaNotificacion){
     return(
         <>
         {(success || error) && (
@@ -21,7 +22,7 @@ export default function PantallaNotificacion({success, error, clearFeedback}: IP
                             ? <CheckCircle2 size={18} className="text-green-500 mt-0.5 shrink-0" />
                             : <XCircle size={18} className="text-red-500 mt-0.5 shrink-0" />
                         }
-                        <span className="flex-1">{success ? "Receta creada correctamente." : error}</span>
+                        <span className="flex-1">{success ? successMessage : error}</span>
                         <button onClick={clearFeedback} className="text-current opacity-50 hover:opacity-100 transition-opacity">
                             <X size={14} />
                         </button>

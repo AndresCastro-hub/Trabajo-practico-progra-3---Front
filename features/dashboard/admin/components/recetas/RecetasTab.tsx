@@ -4,6 +4,7 @@ import { IReceta } from "@/features/dashboard/recetario/types/recetario.types";
 import useRecetario from "@/features/dashboard/recetario/hooks/useRecetario";
 import Pagination from "@/components/Pagination";
 import RecetaActionButton from "./RecetaActionButton";
+import { useRouter } from "next/navigation"
 
 const columnas: IColumn<IReceta>[] = [
     { header: "Nombre", render: (receta) => <span>{receta.nombre}</span> },
@@ -13,6 +14,7 @@ const columnas: IColumn<IReceta>[] = [
 ];
 
 export default function RecetasTab() {
+    const router = useRouter();
     const { recetas, actualPage, totalPages, handlePageChange, handleSearch } = useRecetario();
     
     return (
@@ -22,7 +24,7 @@ export default function RecetasTab() {
                 tableContent={recetas}
                 columns={columnas}
                 getKey={(receta) => receta.nombre}
-                onEdit={() => window.alert("Próximamente")}
+                onEdit={(receta) => router.push(`/admin/editar/${receta.id}`)}
                 onDelete={() => window.alert("Próximamente")}
             />
 
