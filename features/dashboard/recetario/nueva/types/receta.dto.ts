@@ -7,3 +7,12 @@ export interface CrearRecetaDTO{
         cantidad: number
     }[]
 }
+
+export interface EditarRecetaDto{
+    tiempoDePreparacion: number,
+    descripcion: string,
+    ingredientes: {
+        ingrediente_id: number
+        cantidad: number
+    }[]
+}
