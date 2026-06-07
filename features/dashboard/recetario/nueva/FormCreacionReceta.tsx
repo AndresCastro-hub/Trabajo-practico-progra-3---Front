@@ -8,7 +8,7 @@ import Descripcion from "./components/Form/Descripcion"
 import IngredientesForm from "./components/Ingredientes/IngredientesForm"
 import Imagen from "./components/Form/Imagen"
 import { useRouter } from "next/navigation"
-import PantallaNotificacion from "./components/Form/PantallaNotificacion"
+import PantallaNotificacion from "../../../../components/PantallaNotificacion"
 
 export default function FormCreacionReceta() {
 

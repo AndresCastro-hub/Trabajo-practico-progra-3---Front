@@ -3,7 +3,7 @@ import { useParams, useRouter } from "next/navigation"
 import { ChefHat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import PantallaNotificacion from "../nueva/components/Form/PantallaNotificacion";
+import PantallaNotificacion from "../../../../components/PantallaNotificacion";
 import TiempoDePreparacion from "../nueva/components/Form/TiempoDePreparacion";
 import Descripcion from "../nueva/components/Form/Descripcion";
 import IngredientesForm from "../nueva/components/Ingredientes/IngredientesForm";

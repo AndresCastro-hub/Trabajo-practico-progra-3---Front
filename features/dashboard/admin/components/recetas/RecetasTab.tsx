@@ -5,12 +5,17 @@ import useRecetario from "@/features/dashboard/recetario/hooks/useRecetario";
 import Pagination from "@/components/Pagination";
 import RecetaActionButton from "./RecetaActionButton";
 import { useRouter } from "next/navigation"
+import Link from "next/link";
+import { ReceiptText } from 'lucide-react';
 
 const columnas: IColumn<IReceta>[] = [
     { header: "Nombre", render: (receta) => <span>{receta.nombre}</span> },
     { header: "Calorías", render: (receta) => <span>{receta.calorias} kcal</span>, className: "text-center" },
-    { header: "Tiempo de Preparación", render: (receta) => <span>{receta.tiempoPreparacion} min</span>, className: "text-center" },
-    { header: "Ingredientes", render: (/*receta*/) => <span>{8/*recetas.ingredientes.length*/}</span>, className: "text-center" },
+    { header: "Ver detalle", render: (receta) => (
+        <Link href={`/recetario/${receta.id}`} className="text-gray-500 hover:text-gray-700 transition-colors flex justify-center">
+            <ReceiptText size={22} />
+        </Link>
+    ), className: "text-center" },
 ];
 
 export default function RecetasTab() {
