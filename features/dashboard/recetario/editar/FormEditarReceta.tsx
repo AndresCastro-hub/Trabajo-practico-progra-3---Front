@@ -1,50 +1,55 @@
 "use client"
-import { ChefHat } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Nombre from "./components/Form/Nombre"
-import useFormCreacionReceta from "./hooks/useFormCreacionReceta"
-import TiempoDePreparacion from "./components/Form/TiempoDePreparacion"
-import Descripcion from "./components/Form/Descripcion"
-import IngredientesForm from "./components/Ingredientes/IngredientesForm"
-import Imagen from "./components/Form/Imagen"
-import { useRouter } from "next/navigation"
-import PantallaNotificacion from "../../../../components/PantallaNotificacion"
+import { useParams, useRouter } from "next/navigation"
+import { ChefHat } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import PantallaNotificacion from "../../../../components/PantallaNotificacion";
+import TiempoDePreparacion from "../nueva/components/Form/TiempoDePreparacion";
+import Descripcion from "../nueva/components/Form/Descripcion";
+import IngredientesForm from "../nueva/components/Ingredientes/IngredientesForm";
+import useFormEditarReceta from "./hooks/useFormEditarReceta";
+import Imagen from "./components/form/Imagen";
+import Nombre from "../nueva/components/Form/Nombre";
+import { useEffect } from "react";
 
-export default function FormCreacionReceta() {
+export default function FormEditarReceta() {
+    const router = useRouter();
+    const params = useParams();
+    const id = params.id as string;
 
     const {
         nombre,
-        tiempoDePreparacion,
+        tiempoPreparacion,
         descripcion,
         ingredientes,
-        imagen,
+        imagen_url,
         error,
         success,
         loading,
         clearFeedback,
-        setImagen,
-        handleSubmit,
+        puedeEditarReceta,
+        agregarIngrediente,
         setDescripcion,
         setTiempoDePreparacion,
-        setNombre,
-        agregarIngrediente,
         eliminarIngrediente,
         actualizarIngrediente,
-        puedeCrearReceta
-    } = useFormCreacionReceta()
+        handleSubmit
+    } = useFormEditarReceta(id);
 
-    const router = useRouter()
+    useEffect(() => {
+        if (success) {
+            setTimeout(() => {
+                router.push('/admin')
+            }, 1000);
+        }
+    }, [success, router]);
 
     return (
         <div className="min-h-screen bg-slate-50">
 
-            <PantallaNotificacion success={success} successMessage="Receta creada correctamente." error={error} clearFeedback={clearFeedback}/>
+            <PantallaNotificacion success={success} successMessage="Receta editada correctamente." error={error} clearFeedback={clearFeedback}/>
 
-            {loading && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-                    <div className="w-10 h-10 border-4 border-green-200 border-t-green-600 rounded-full animate-spin" />
-                </div>
-            )}
+            {loading && <LoadingSpinner />}
 
             <div className="max-w-6xl mx-auto px-4 py-8 md:px-8">
 
@@ -53,8 +58,8 @@ export default function FormCreacionReceta() {
                         <ChefHat className="text-green-600" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-slate-900">Nueva receta</h1>
-                        <p className="text-slate-500 mt-1">Creá una nueva receta con sus ingredientes e imagen.</p>
+                        <h1 className="text-3xl font-bold text-slate-900">Editar receta</h1>
+                        <p className="text-slate-500 mt-1">Modificá los detalles de tu receta.</p>
                     </div>
                 </div>
 
@@ -63,14 +68,11 @@ export default function FormCreacionReceta() {
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                             <div className="lg:col-span-2 flex flex-col gap-2">
-                                <Nombre
-                                    value={nombre}
-                                    setValue={setNombre}
-                                />
+                                <Nombre value={nombre} isDisabled={true} />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <TiempoDePreparacion
-                                    value={tiempoDePreparacion}
+                                    value={tiempoPreparacion}
                                     setValue={setTiempoDePreparacion}
                                 />
                             </div>
@@ -89,15 +91,15 @@ export default function FormCreacionReceta() {
                             />
                         </div>
 
-                        <div className="flex flex-col gap-3">
-                            <Imagen setValue={setImagen} value={imagen} />
+                        <div>
+                            {imagen_url && <Imagen value={imagen_url} />}
                         </div>
                     </div>
 
                     <div className="bg-white pt-6 mt-8 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-end gap-3">
                         <Button onClick={() => router.back()} variant="outline" className="rounded-xl h-11 w-full md:w-auto">Cancelar</Button>
-                        <Button disabled={!puedeCrearReceta() || loading} onClick={handleSubmit} className="rounded-xl h-11 bg-green-600 hover:bg-green-700 w-full md:w-auto">
-                            Crear receta
+                        <Button disabled={!puedeEditarReceta() || loading} onClick={handleSubmit} className="rounded-xl h-11 bg-green-600 hover:bg-green-700 w-full md:w-auto">
+                            Guardar cambios
                         </Button>
                     </div>
                 </div>
