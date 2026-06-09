@@ -2,7 +2,7 @@
 import Header from "@/components/Header"
 import { useRouter } from "next/navigation"
 import NavBar from "./components/NavBar"
-import Pagination from "./components/Pagination"
+import Pagination from "@/components/Pagination"
 import useRecetario from "./hooks/useRecetario"
 import RecipeGrid from "./components/RecipeGrid"
 

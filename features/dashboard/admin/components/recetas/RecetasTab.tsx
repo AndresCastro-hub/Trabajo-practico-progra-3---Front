@@ -1,36 +1,35 @@
 import AdminContentHeader from "../AdminContentHeader";
 import AdminContentTable, { IColumn } from "../AdminContentTable";
 import { IReceta } from "@/features/dashboard/recetario/types/recetario.types";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import useRecetario from "@/features/dashboard/recetario/hooks/useRecetario";
-import Pagination from "@/features/dashboard/recetario/components/Pagination";
+import Pagination from "@/components/Pagination";
+import RecetaActionButton from "./RecetaActionButton";
+import { useRouter } from "next/navigation"
+import Link from "next/link";
+import { ReceiptText } from 'lucide-react';
 
 const columnas: IColumn<IReceta>[] = [
     { header: "Nombre", render: (receta) => <span>{receta.nombre}</span> },
     { header: "Calorías", render: (receta) => <span>{receta.calorias} kcal</span>, className: "text-center" },
-    { header: "Tiempo de Preparación", render: (receta) => <span>{receta.tiempoPreparacion} min</span>, className: "text-center" },
-    { header: "Ingredientes", render: (/*receta*/) => <span>{8/*recetas.ingredientes.length*/}</span>, className: "text-center" },
+    { header: "Ver detalle", render: (receta) => (
+        <Link href={`/recetario/${receta.id}`} className="text-gray-500 hover:text-gray-700 transition-colors flex justify-center">
+            <ReceiptText size={22} />
+        </Link>
+    ), className: "text-center" },
 ];
 
 export default function RecetasTab() {
     const router = useRouter();
     const { recetas, actualPage, totalPages, handlePageChange, handleSearch } = useRecetario();
-
-    const actionButton = (
-        <Button className="h-[50px] px-6" onClick={() => router.push("/recetario/nueva")}>
-            + Nueva Receta Global
-        </Button>
-    );
     
     return (
         <>
-            <AdminContentHeader onSearch={handleSearch} actionButton={actionButton} />
+            <AdminContentHeader onSearch={handleSearch} actionButton={<RecetaActionButton />} />
             <AdminContentTable
                 tableContent={recetas}
                 columns={columnas}
                 getKey={(receta) => receta.nombre}
-                onEdit={() => window.alert("Próximamente")}
+                onEdit={(receta) => router.push(`/admin/editar/${receta.id}`)}
                 onDelete={() => window.alert("Próximamente")}
             />
 

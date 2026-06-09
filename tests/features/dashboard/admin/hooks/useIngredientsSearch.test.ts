@@ -5,31 +5,45 @@ import { getIngredients } from "@/features/dashboard/admin/services/ingredientSe
 jest.mock("@/features/dashboard/admin/services/ingredientService");
 const mockGetIngredients = getIngredients as jest.Mock;
 
-const mockIngredientes = [
-    { id: 1, nombre: "Tomate", unidad: "u" },
-    { id: 2, nombre: "Leche", unidad: "ml" },
-];
+const mockResponse = {
+    ingredients: [
+        { id: 1, nombre: "Tomate", unidad: "u" },
+        { id: 2, nombre: "Leche", unidad: "ml" },
+    ],
+    totalRecords: 2,
+    totalPages: 1,
+};
 
 describe("useIngredientsSearch", () => {
     beforeEach(() => {
-        mockGetIngredients.mockResolvedValue(mockIngredientes);
+        mockGetIngredients.mockResolvedValue(mockResponse);
     });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it("hace fetch inicial al montar y carga resultados", async () => {
+    it("hace fetch inicial y carga ingredientes", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 
         await waitFor(() => {
-            expect(result.current.resultados).toEqual(mockIngredientes);
+            expect(result.current.ingredientes).toEqual(mockResponse.ingredients);
         });
 
-        expect(mockGetIngredients).toHaveBeenCalledWith(10, 0, "");
+        expect(mockGetIngredients).toHaveBeenCalledWith(1, "");
     });
 
-    it("hace fetch con busquedaConfirmada al llamar handleSearch", async () => {
+    it("loading es true al iniciar y false al terminar", async () => {
+        const { result } = renderHook(() => useIngredientsSearch());
+
+        expect(result.current.loading).toBe(true);
+
+        await waitFor(() => {
+            expect(result.current.loading).toBe(false);
+        });
+    });
+
+    it("hace fetch con el nombre al llamar handleSearch", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 
         await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
@@ -37,34 +51,34 @@ describe("useIngredientsSearch", () => {
         act(() => result.current.handleSearch("Tomate"));
 
         await waitFor(() => {
-            expect(mockGetIngredients).toHaveBeenCalledWith(10, 0, "Tomate");
+            expect(mockGetIngredients).toHaveBeenCalledWith(1, "Tomate");
         });
     });
 
-    it("resetea la página a 0 al llamar handleSearch", async () => {
+    it("resetea la página a 1 al llamar handleSearch", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 
         await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
 
-        act(() => result.current.setPagina(3));
+        act(() => result.current.handlePageChange(3));
         await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(2));
 
         act(() => result.current.handleSearch(""));
 
         await waitFor(() => {
-            expect(result.current.pagina).toBe(0);
+            expect(result.current.actualPage).toBe(1);
         });
     });
 
-    it("calcula el offset correcto según la página", async () => {
+    it("cambia de página al llamar handlePageChange", async () => {
         const { result } = renderHook(() => useIngredientsSearch());
 
         await waitFor(() => expect(mockGetIngredients).toHaveBeenCalledTimes(1));
 
-        act(() => result.current.setPagina(2));
+        act(() => result.current.handlePageChange(3));
 
         await waitFor(() => {
-            expect(mockGetIngredients).toHaveBeenCalledWith(10, 20, "");
+            expect(mockGetIngredients).toHaveBeenCalledWith(3, "");
         });
     });
 
@@ -75,7 +89,17 @@ describe("useIngredientsSearch", () => {
 
         await waitFor(() => {
             expect(result.current.error).toBe("Error de red");
-            expect(result.current.resultados).toEqual([]);
+            expect(result.current.ingredientes).toEqual([]);
+            expect(result.current.loading).toBe(false);
+        });
+    });
+
+    it("carga totalPages y total correctamente", async () => {
+        const { result } = renderHook(() => useIngredientsSearch());
+
+        await waitFor(() => {
+            expect(result.current.totalPages).toBe(1);
+            expect(result.current.total).toBe(2);
         });
     });
 });

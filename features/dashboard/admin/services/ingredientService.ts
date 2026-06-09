@@ -1,18 +1,8 @@
 import { INestError } from "@/interface/apiResponse";
-import { getTokenFromCookie } from "@/hooks/useAuth"
+import { getTokenFromCookie } from "@/hooks/useAuth";
+import { IIngredient, IIngredientResponse, IIngredientService } from "../types/adminTypes";
 
-interface IIngredientService {
-    nombre: string;
-    unidad: string;
-}
-
-export interface IIngredientResponse {
-    id: number;
-    nombre: string;
-    unidad: string;
-}
-
-export async function postIngredient({ nombre, unidad }: IIngredientService): Promise<IIngredientResponse> {
+export async function postIngredient({ nombre, unidad }: IIngredientService): Promise<IIngredient> {
     try {
         const response = await fetch('http://localhost:5000/ingredients', {
             method: 'POST',
@@ -26,7 +16,7 @@ export async function postIngredient({ nombre, unidad }: IIngredientService): Pr
             throw new Error(message || "Error en registrar el ingrediente");
         }
 
-        const data: IIngredientResponse = await response.json()
+        const data: IIngredient = await response.json()
 
         return data;
 
@@ -39,11 +29,10 @@ export async function postIngredient({ nombre, unidad }: IIngredientService): Pr
     }
 }
 
-export async function getIngredients(limit: number = 10, offset: number = 0, nombre?: string): Promise<IIngredientResponse[]> {
+export async function getIngredients(page: number, name?: string): Promise<IIngredientResponse> {
     const params = new URLSearchParams({
-        limit: String(limit),
-        offset: String(offset),
-        ...(nombre ? { nombre } : {}),
+        page: String(page),
+        ...(name ? { name } : {}),
     })
 
     try {
@@ -58,7 +47,7 @@ export async function getIngredients(limit: number = 10, offset: number = 0, nom
             throw new Error(message || "Error en registrar el ingrediente");
         }
 
-        const data: IIngredientResponse[] = await response.json()
+        const data: IIngredientResponse = await response.json()
 
         return data;
 

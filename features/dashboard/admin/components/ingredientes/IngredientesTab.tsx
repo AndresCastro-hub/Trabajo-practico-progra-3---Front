@@ -1,24 +1,38 @@
-import IngredientesTable from "./IngredientesTable";
-import IngredientesHeader from "./IngredientesHeader";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { useIngredientsSearch } from "../../hooks/useIngredientsSearch";
+import AdminContentHeader from "../AdminContentHeader";
+import AdminContentTable, { IColumn } from "../AdminContentTable";
+import IngredienteActionButton from "./IngredienteActionButton";
+import { IIngredientService } from "../../types/adminTypes";
+import ErrorState from "@/components/ErrorState";
+import Pagination from "@/components/Pagination";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
+const columnas: IColumn<IIngredientService>[] = [
+    { header: "Nombre", render: (ingrediente) => <span className="font-small ">{ingrediente.nombre}</span> },
+    { header: "Unidad", render: (ingrediente) => <span>{ingrediente.unidad}</span>, className: "text-center" },
+];
 
 export default function IngredientesTab() {
-    const { pagina, setPagina, resultados, error, handleSearch } = useIngredientsSearch();
+    const { ingredientes, totalPages, actualPage, loading, error, handleSearch, handlePageChange } = useIngredientsSearch();
     return (
         <>
-            <IngredientesHeader handleSearch={handleSearch} />
-            <IngredientesTable resultados={resultados} pagina={pagina} setPagina={setPagina} />
-            {error && (
-                <Alert variant="destructive">
-                    <AlertCircle size={16} />
-                    <AlertDescription>Error al cargar los ingredientes: {error}</AlertDescription>
-                </Alert>
-            )}
-            {/*recetas.length > 0 && (
+            {
+                loading && <LoadingSpinner />
+            }
+            <AdminContentHeader onSearch={handleSearch} actionButton={<IngredienteActionButton />} />
+            <AdminContentTable
+                tableContent={ingredientes}
+                columns={columnas}
+                getKey={(ingrediente) => ingrediente.nombre}
+            />
+            {!loading && ingredientes.length > 0 && (
                 <Pagination current={actualPage} lastPage={Math.ceil(totalPages)} onPageChange={handlePageChange} />
-            )*/}
+            )}
+            {error && (
+                <>
+                    <ErrorState message={`Error al cargar los ingredientes: ${error}`} onBack={() => handleSearch("")} />
+                </>
+            )}
         </>
     )
 }
