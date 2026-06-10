@@ -14,17 +14,19 @@ export default function Calendario (){
                     <h2 className="text-xl font-bold">Semana del {hoy} al {finSemana}</h2>
                 </div>
                 <div className="flex gap-2">
-                    <button className="bg-grey-300 text-black font-bold px-2 py-2 rounded-full border border-gray-300">
+                    <button className="bg-grey-300 text-black font-bold px-2 py-2 rounded-full border border-gray-300 hover:bg-green-500 hover:text-white transition-colors">
                         <ChevronLeft />
                     </button>
-                    <button className="bg-grey-300 text-black font-bold px-4 py-2 rounded-xl border border-gray-300">{`Hoy`}</button>
-                    <button className="bg-grey-300 text-black font-bold px-2 py-2 rounded-full border border-gray-300">
+                    <button className="bg-grey-300 text-black font-bold px-4 py-2 rounded-xl border border-gray-300 hover:bg-green-500 hover:text-white transition-colors">
+                        {`Hoy`}
+                    </button>
+                    <button className="bg-grey-300 text-black font-bold px-2 py-2 rounded-full border border-gray-300 hover:bg-green-500 hover:text-white transition-colors">
                         <ChevronRight />
                     </button>
                 </div>
             </div>
             <hr className="border-gray-300 mb-4" />
-            <div className="flex flex-col gap-4 items-center">
+            <div className="h-[70vh] px-12 py-4 mx-5">
                 <CarouselCalendario />
             </div>
         </>
