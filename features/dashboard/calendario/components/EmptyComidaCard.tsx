@@ -1,15 +1,16 @@
+"use client";
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus } from 'lucide-react';
 
 export function EmptyComidaCard({ tipoComida }: { tipoComida: string }) {
     return(
-        <div className="w-full h-full">
+        <div className="w-full h-full min-h-[33vh]">
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="outline" className="border-2 border-dashed rounded-2xl w-full h-full flex flex-col gap-2">
-                        <Plus className="h-5 w-5" />
-                        <span className="text-sm">{tipoComida}</span>
+                        <Plus size={500} className="text-gray-600" />
+                        <span className="text-xl font-semibold text-gray-600">{` Agregar ${tipoComida}`}</span>
                     </Button>
                 </DialogTrigger>
 
