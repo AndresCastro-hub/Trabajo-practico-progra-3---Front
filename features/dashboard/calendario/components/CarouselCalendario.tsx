@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { ComidaCard } from "./ComidaCard"
 import {
   Carousel,
   CarouselContent,
@@ -7,138 +6,45 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { EmptyComidaCard } from "./EmptyComidaCard";
+import { IDia } from "../types/calendarioTypes";
+import { ComidasDelDia } from "./ComidasDelDia";
+import ErrorState from "@/components/ErrorState";
 import moment from 'moment';
+import { useRouter } from "next/navigation";
 
-export interface Comida {
-    fecha: string;
-    receta: {
-        titulo: string;
-        descripcion: string;
-        imagen: string;
-        calorias: number;
-        tiempoPreparacion: number;
-    };
-    tipo_comida: string;
+interface CarouselCalendarioProps {
+    semana: IDia[];
+    loading: boolean;
+    error: string | null;
 }
 
-const mockData: Comida[] = [
-    {
-        fecha: "2026-06-10",
-        receta: {
-            titulo: "Milanesa napolitana con fritasaaaaaaa",
-            descripcion: "asdasdasdasd",
-            imagen: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            calorias: 500,
-            tiempoPreparacion: 30
-        },
-        tipo_comida: "Almuerzo"
-    },
-    {
-        fecha: "2026-06-13",
-        receta: {
-            titulo: "Milanesa napolitana con fritasaaaaaaa",
-            descripcion: "asdasdasdasd",
-            imagen: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            calorias: 500,
-            tiempoPreparacion: 30
-        },
-        tipo_comida: "Almuerzo"
-    },
-    {
-        fecha: "2026-06-12",
-        receta: {
-            titulo: "Milanesa napolitana con fritasaaaaaaa",
-            descripcion: "asdasdasdasd",
-            imagen: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            calorias: 500,
-            tiempoPreparacion: 30
-        },
-        tipo_comida: "Almuerzo"
-    },
-    {
-        fecha: "2026-06-16",
-        receta: {
-            titulo: "Milanesa napolitana con fritasaaaaaaa",
-            descripcion: "asdasdasdasd",
-            imagen: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            calorias: 500,
-            tiempoPreparacion: 30
-        },
-        tipo_comida: "Almuerzo"
-    },
-    {
-        fecha: "2026-06-10",
-        receta: {
-            titulo: "Ensalada César1111",
-            descripcion: "asdasdasdasd",
-            imagen: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            calorias: 300,
-            tiempoPreparacion: 20
-        },
-        tipo_comida: "Cena"
-    },{
-        fecha: "2026-06-13",
-        receta: {
-            titulo: "Ensalada César1111",
-            descripcion: "asdasdasdasd",
-            imagen: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            calorias: 300,
-            tiempoPreparacion: 20
-        },
-        tipo_comida: "Cena"
-    },
-    {
-        fecha: "2026-06-15",
-        receta: {
-            titulo: "Ensalada César",
-            descripcion: "asdasdasdasd",
-            imagen: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            calorias: 300,
-            tiempoPreparacion: 20
-        },
-        tipo_comida: "Cena"
-    }
-];
+export function CarouselCalendario({semana, loading, error}: CarouselCalendarioProps) {
+    const router = useRouter();
 
-export function CarouselCalendario() {
-    const data = Array.from({ length: 7 }).map((_, index) => {
-        const hoy = moment().add(index, 'days');
-        const diaSemana = hoy.locale('es').format('ddd');
-        const nombreDia = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
-        const numeroDia = hoy.locale('es').format('DD');
-        const almuerzo = mockData.find(item => item.fecha === hoy.toISOString().split('T')[0] && item.tipo_comida === "Almuerzo");
-        const cena = mockData.find(item => item.fecha === hoy.toISOString().split('T')[0] && item.tipo_comida === "Cena");
-        return {
-            nombreDia,
-            numeroDia,
-            almuerzo,
-            cena
-        }
-    });
+    if (loading) return (
+        <div className="flex justify-center items-center py-24">
+            <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+    )
+
+    if (error) return (
+        <ErrorState message={error} onBack={() => router.back()} />
+    )
+
     return (
         <Carousel opts={{ align: "start", watchDrag: false }} className="w-full h-full">
             <CarouselContent className="h-full" >
-                {data.map((item, index) => {
+                {semana.map((dia) => {
                     return(
-                        <CarouselItem key={index} className="h-full basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                        <CarouselItem key={`${dia.fecha}`} className="h-full basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                             <div className="p-1 h-full">
                                 <Card className="h-full flex flex-col">
                                     <header className="flex flex-row justify-between items-center border-b px-4 pb-2 shrink-0">
-                                        <h3 className="text-lg font-semibold">{`${item.nombreDia} ${item.numeroDia}`}</h3>
+                                        <h3 className="text-lg font-semibold">{`${moment(dia.fecha).locale('es').format('ddd')} ${moment(dia.fecha).locale('es').format('DD')}`}</h3>
                                     </header>
 
                                     <CardContent className="grid grid-rows-2 gap-5 flex-1 min-h-0 p-3">
-                                        {item.almuerzo ? (
-                                            <ComidaCard tipoComida="Almuerzo" receta={item.almuerzo.receta} />
-                                        ) : (
-                                            <EmptyComidaCard tipoComida="Almuerzo" />
-                                        )}
-                                        {item.cena ? (
-                                            <ComidaCard tipoComida="Cena" receta={item.cena.receta} />
-                                        ) : (
-                                            <EmptyComidaCard tipoComida="Cena" />
-                                        )}
+                                        <ComidasDelDia comidasDelDia={dia.comidas} />
                                     </CardContent>
                                 </Card>
                             </div>
