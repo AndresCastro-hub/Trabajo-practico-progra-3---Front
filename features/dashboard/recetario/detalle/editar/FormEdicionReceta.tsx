@@ -11,9 +11,6 @@ import IngredientesForm from "../../nueva/components/Ingredientes/IngredientesFo
 export default function FormEdicionReceta(){
     const router = useRouter();
     const params = useParams();
-    const handleEdicion = () =>{
-
-    }
 
     const id = params.id as string
     const {
@@ -24,7 +21,8 @@ export default function FormEdicionReceta(){
         agregarIngrediente,
         eliminarIngrediente,
         actualizarIngrediente,
-        ingredientes
+        ingredientes,
+        handleEdicion
     } = useFormEdicionReceta(id)
     return(
         <div className="min-h-screen bg-slate-50">

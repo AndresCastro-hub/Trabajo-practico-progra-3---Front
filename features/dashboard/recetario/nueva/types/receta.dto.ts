@@ -1,3 +1,5 @@
+import { IngredientDto } from "./receta.types"
+
 export interface CrearRecetaDTO{
     nombre: string
     descripcion: string
@@ -9,10 +11,13 @@ export interface CrearRecetaDTO{
 }
 
 export interface EditarRecetaDto{
-    tiempoDePreparacion: number,
-    descripcion: string,
-    ingredientes: {
-        ingrediente_id: number
-        cantidad: number
-    }[]
+    
+    description?: string;
+
+    prepTime?: number;
+
+    deletedIngredientsId?: number[];
+
+    addedIngredients?: IngredientDto[];
+
 }
