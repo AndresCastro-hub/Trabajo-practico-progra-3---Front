@@ -7,6 +7,7 @@ import useFormEdicionReceta from "./hooks/useFormEdicionReceta";
 import { useParams } from "next/navigation";
 import TiempoDePreparacion from "../../nueva/components/Form/TiempoDePreparacion";
 import IngredientesForm from "../../nueva/components/Ingredientes/IngredientesForm";
+import PantallaNotificacion from "../../nueva/components/Form/PantallaNotificacion";
 
 export default function FormEdicionReceta(){
     const router = useRouter();
@@ -22,10 +23,23 @@ export default function FormEdicionReceta(){
         eliminarIngrediente,
         actualizarIngrediente,
         ingredientes,
-        handleEdicion
+        handleEdicion,
+        puedeEditar,
+        loading,
+        success,
+        error,
+        clearFeedback
     } = useFormEdicionReceta(id)
     return(
         <div className="min-h-screen bg-slate-50">
+
+            <PantallaNotificacion success={success} error={error} clearFeedback={clearFeedback}/>
+
+            {loading && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                    <div className="w-10 h-10 border-4 border-green-200 border-t-green-600 rounded-full animate-spin" />
+                </div>
+            )}
 
             <div className="max-w-6xl mx-auto px-4 py-8 md:px-8" >
 
@@ -71,7 +85,7 @@ export default function FormEdicionReceta(){
 
                     <div className="bg-white pt-6 mt-8 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-end gap-3">
                         <Button onClick={() => router.back()} variant="outline" className="rounded-xl h-11 w-full md:w-auto">Cancelar</Button>
-                        <Button onClick={handleEdicion} className="rounded-xl h-11 bg-green-600 hover:bg-green-700 w-full md:w-auto">
+                        <Button disabled={!puedeEditar} onClick={handleEdicion} className="rounded-xl h-11 bg-green-600 hover:bg-green-700 w-full md:w-auto">
                             Editar receta
                         </Button>
                     </div>  

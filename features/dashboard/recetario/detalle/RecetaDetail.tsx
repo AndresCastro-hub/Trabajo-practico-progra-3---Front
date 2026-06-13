@@ -13,11 +13,15 @@ export default function RecetaDetail() {
     const router = useRouter()
     const params = useParams()
     const id = params.id as string
-
+    
     const { receta, loading, error } = useRecetaDetail(id)
 
     const handleEditar = () => {
         router.push(`/recetario/${id}/editar`)
+    }
+
+    const esDePlataforma = () =>{
+        return false
     }
 
     const handleEliminar = async () => {
@@ -46,7 +50,7 @@ export default function RecetaDetail() {
                         <span className="text-sm font-medium">Volver</span>
                     </button>
 
-                    <RecetaActions onEditar={handleEditar} onEliminar={handleEliminar} />
+                    {!esDePlataforma() && <RecetaActions onEditar={handleEditar} onEliminar={handleEliminar} />}
 
                 </div>
 

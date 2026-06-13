@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { IFormEdicion, IngredienteRow } from "../../../nueva/types/receta.types";
 import useRecetaDetail from "../../hooks/useRecetaDetail";
 import { editarReceta } from "../services/EditRecipe";
+import { INestError } from "@/interface/apiResponse";
+import { useRouter } from "next/navigation";
 
 export default function useFormEdicionReceta(id: string){
     const [form, setForm] = useState<IFormEdicion>({
@@ -12,6 +14,12 @@ export default function useFormEdicionReceta(id: string){
         ingredientesAgregados: [],
         ingredientesEliminados: []
     })
+
+    const[puedeEditar, setPuedeEditar] = useState<boolean>()
+    const[loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<boolean>(false)
+    const router = useRouter()
 
     const { receta } = useRecetaDetail(id)
 
@@ -46,6 +54,7 @@ export default function useFormEdicionReceta(id: string){
             ...prev,
             tiempoDePreparacion
         }))
+        setPuedeEditar(true)
     }
 
     const setDescripcion = (descripcion: string) => {
@@ -53,6 +62,7 @@ export default function useFormEdicionReceta(id: string){
             ...prev,
             descripcion
         }))
+        setPuedeEditar(true)
     }
 
     const mapFormToRecetaEditarDto = (form: IFormEdicion) =>{
@@ -82,7 +92,7 @@ export default function useFormEdicionReceta(id: string){
             ...prev,
             ingredientes: [
                 ...prev.ingredientes,
-                { ingrediente: null, cantidad: "" }
+                { ingrediente: null, cantidad: "" },
             ],
         }))
     }
@@ -90,7 +100,7 @@ export default function useFormEdicionReceta(id: string){
     const eliminarIngrediente = (index: number) => {
         setForm((prev) => {
         const ingredienteAEliminar = prev.ingredientes[index]
-
+        setPuedeEditar(true)
         return {
             ...prev,
             ingredientes: prev.ingredientes.filter((_, i) => i !== index),
@@ -106,15 +116,36 @@ export default function useFormEdicionReceta(id: string){
             ...prev,
             ingredientes: prev.ingredientes.map((item, i) =>
                 i === index
-                    ? { ...item, [field]: value }
+                    ? (setPuedeEditar(true), { ...item, [field]: value })
                     : item
             )
         }))
     }
 
     const handleEdicion = async () =>{
-        const data = mapFormToRecetaEditarDto(form)
-        await editarReceta(id, data)
+        setLoading(true)
+        setSuccess(false)
+        setError(null)
+
+        try{
+            const data = mapFormToRecetaEditarDto(form)
+            await editarReceta(id, data)
+            setSuccess(true)
+        }catch(e){
+            const apiError = e as INestError
+            const mensaje = Array.isArray(apiError.message)
+                ? apiError.message.join(", ")
+                : apiError.message ?? "Error inesperado"
+            setError(mensaje)
+        }finally{
+            setLoading(false)
+            router.back()
+        }
+    }
+
+    const clearFeedback = () => {
+        setError(null)
+        setSuccess(false)
     }
 
     const {tiempoDePreparacion, descripcion, ingredientes} = form
@@ -129,6 +160,11 @@ export default function useFormEdicionReceta(id: string){
         actualizarIngrediente,
         mapFormToRecetaEditarDto,
         ingredientes,
-        handleEdicion
+        handleEdicion,
+        puedeEditar,
+        loading,
+        error,
+        success,
+        clearFeedback
     }
 }
