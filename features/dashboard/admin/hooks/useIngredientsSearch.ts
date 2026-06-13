@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getIngredients } from "../services/ingredientService";
-import { IIngredient } from "../types/adminTypes";
+import { IIngredient } from "../types/admin.types";
 
 export function useIngredientsSearch() {
     const [filters, setFilters] = useState({

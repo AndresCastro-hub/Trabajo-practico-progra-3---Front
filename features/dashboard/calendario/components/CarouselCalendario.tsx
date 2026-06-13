@@ -6,11 +6,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { IDia } from "../types/calendarioTypes";
+import { IDia } from "../types/calendario.types";
 import { ComidasDelDia } from "./ComidasDelDia";
 import ErrorState from "@/components/ErrorState";
 import moment from 'moment';
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface CarouselCalendarioProps {
     semana: IDia[];
@@ -21,15 +22,9 @@ interface CarouselCalendarioProps {
 export function CarouselCalendario({semana, loading, error}: CarouselCalendarioProps) {
     const router = useRouter();
 
-    if (loading) return (
-        <div className="flex justify-center items-center py-24">
-            <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
-        </div>
-    )
+    if (loading) return ( <LoadingSpinner/> );
 
-    if (error) return (
-        <ErrorState message={error} onBack={() => router.back()} />
-    )
+    if (error) return ( <ErrorState message={error} onBack={() => router.back()} /> );
 
     return (
         <Carousel opts={{ align: "start", watchDrag: false }} className="w-full h-full">
@@ -44,7 +39,7 @@ export function CarouselCalendario({semana, loading, error}: CarouselCalendarioP
                                     </header>
 
                                     <CardContent className="grid grid-rows-2 gap-5 flex-1 min-h-0 p-3">
-                                        <ComidasDelDia comidasDelDia={dia.comidas} />
+                                        <ComidasDelDia comidasDelDia={dia} />
                                     </CardContent>
                                 </Card>
                             </div>

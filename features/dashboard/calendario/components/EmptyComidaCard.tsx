@@ -2,8 +2,14 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus } from 'lucide-react';
+import { AsignarRecetaForm } from './AsignarRecetaForm'
 
-export function EmptyComidaCard({ tipoComida }: { tipoComida: string }) {
+interface EmptyComidaCardProps {
+    tipoComida: string;
+    fecha: string;
+}
+
+export function EmptyComidaCard({ tipoComida, fecha }: EmptyComidaCardProps) {
     return(
         <div className="w-full h-full min-h-[33vh]">
             <Dialog>
@@ -14,14 +20,15 @@ export function EmptyComidaCard({ tipoComida }: { tipoComida: string }) {
                     </Button>
                 </DialogTrigger>
 
-                <DialogContent className="bg-white border border-border rounded-xl">
+                <DialogContent className="bg-white border border-border rounded-xl min-h-[33vh] flex flex-col">
                     <DialogHeader>
-                        <DialogTitle>ASIGNAR RECETA</DialogTitle>
+                        <DialogTitle className='text-center text-gray-600 text-lg'>Asignar Receta</DialogTitle>
+                        <hr/>
                     </DialogHeader>
                 
-                    <p>FORM ASIGNAR RECETA</p>
+                    <AsignarRecetaForm fecha={fecha} tipoComida={tipoComida} />
                 </DialogContent>
             </Dialog>
         </div>
     );
-}   
+}

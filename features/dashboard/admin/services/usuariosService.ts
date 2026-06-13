@@ -1,6 +1,6 @@
 import { INestError } from "@/interface/apiResponse";
 import { getTokenFromCookie } from "@/hooks/useAuth"
-import { IUserResponse } from "../types/adminTypes";
+import { IUserResponse } from "../types/admin.types";
 
 export async function getUsuarios(page: number, nombre?: string): Promise<IUserResponse> {
     const params = new URLSearchParams({

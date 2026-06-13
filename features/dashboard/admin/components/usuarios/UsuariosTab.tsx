@@ -1,6 +1,6 @@
 import AdminContentHeader from "../AdminContentHeader";
 import AdminContentTable, { IColumn } from "../AdminContentTable";
-import { IUser } from "../../types/adminTypes";
+import { IUser } from "../../types/admin.types";
 import Pagination from "@/components/Pagination";
 import { useUsersSearch } from "../../hooks/useUsersSearch";
 

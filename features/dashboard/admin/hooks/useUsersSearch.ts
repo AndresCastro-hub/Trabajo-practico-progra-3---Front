@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { IUser } from "../types/adminTypes"
+import { IUser } from "../types/admin.types"
 import { getUsuarios } from "../services/usuariosService"
 
 export const useUsersSearch = () => {

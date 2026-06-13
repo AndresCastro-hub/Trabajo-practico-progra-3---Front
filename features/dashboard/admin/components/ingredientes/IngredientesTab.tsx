@@ -2,7 +2,7 @@ import { useIngredientsSearch } from "../../hooks/useIngredientsSearch";
 import AdminContentHeader from "../AdminContentHeader";
 import AdminContentTable, { IColumn } from "../AdminContentTable";
 import IngredienteActionButton from "./IngredienteActionButton";
-import { IIngredientService } from "../../types/adminTypes";
+import { IIngredientService } from "../../types/admin.types";
 import ErrorState from "@/components/ErrorState";
 import Pagination from "@/components/Pagination";
 import LoadingSpinner from "@/components/LoadingSpinner";

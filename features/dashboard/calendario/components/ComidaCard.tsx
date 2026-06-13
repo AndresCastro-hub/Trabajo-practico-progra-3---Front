@@ -4,7 +4,7 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/componen
 import { Utensils } from 'lucide-react';
 import { Pencil, Trash2, Clock, Flame } from 'lucide-react';
 import Image from "next/image";
-import { IComida } from "../types/calendarioTypes";
+import { IComida } from "../types/calendario.types";
 import { useModoControl } from "@/context/ModoControlContext"
 
 export function ComidaCard({receta}: {receta: IComida}) {

@@ -1,5 +1,6 @@
 import { INestError } from "@/interface/apiResponse";
 import { getTokenFromCookie } from "@/hooks/useAuth";
+import { AsignarRecetaDTO } from "../types/calendario.types";
 
 export const obtenerCalendarioSemanal = async (fecha: string) => {
 
@@ -9,12 +10,31 @@ export const obtenerCalendarioSemanal = async (fecha: string) => {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${getTokenFromCookie()}`
         },
-    })
+    });
 
     if (!response.ok) {
-        const error: INestError = await response.json()
-        throw error
+        const error: INestError = await response.json();
+        throw error;
     }
 
-    return response.json()
+    return response.json();
+}
+
+export const asignarRecetaACalendario = async (data: AsignarRecetaDTO) => {
+
+    const response = await fetch(`http://localhost:5000/Calendar`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getTokenFromCookie()}`
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        const error: INestError = await response.json();
+        throw error;
+    }
+
+    return response.json();
 }

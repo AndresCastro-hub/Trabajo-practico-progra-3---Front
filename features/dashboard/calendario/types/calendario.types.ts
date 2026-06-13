@@ -22,6 +22,12 @@ export interface IComida {
     tipoComida: string;
 }
 
+export interface AsignarRecetaDTO {
+    fecha: string;
+    tipo_comida_id: number;
+    receta_id: number;
+}
+
 /*
 Semana{ 
     dia1:[ comida1: { ... }, comida2: { ... } ],

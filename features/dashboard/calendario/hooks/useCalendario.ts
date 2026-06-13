@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ICalendarWeekItemDto, IDia } from "../types/calendarioTypes"
+import { ICalendarWeekItemDto, IDia } from "../types/calendario.types"
 import { obtenerCalendarioSemanal } from "../service/calendarioService"
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ const semanaVacia = (fecha:string): IDia[] => {
         semana.push({
             fecha: fechaIterada,
             comidas: [{
-                tipoComida: 'almuerzo',
+                tipoComida: 'Almuerzo',
                 titulo: '',
                 descripcion: '',
                 imagen: '',
@@ -20,7 +20,7 @@ const semanaVacia = (fecha:string): IDia[] => {
                 tiempoPreparacion: 0,
                 },
                 {
-                    tipoComida: 'cena',
+                    tipoComida: 'Cena',
                     titulo: '',
                     descripcion: '',
                     imagen: '',
@@ -32,41 +32,8 @@ const semanaVacia = (fecha:string): IDia[] => {
     }
     return semana;
 }
-/*
-function transformarSemana(fechaInicio: string, semanaDto: ICalendarWeekItemDto[]): IDia[] {
-    const semanaCompleta = semanaVacia(fechaInicio);
 
-    semanaDto.forEach((item) => {
-        const diaCorrespondiente = semanaCompleta.find(dia => dia.fecha === item.fecha);
-
-        if (diaCorrespondiente) {
-            const comidaCorrespondiente = diaCorrespondiente.comidas.find(
-                comida => comida.tipoComida.toLowerCase() === item.tipo_comida.toLowerCase()
-            );
-
-            if (comidaCorrespondiente) {
-                comidaCorrespondiente.titulo = item.titulo;
-                comidaCorrespondiente.descripcion = item.descripcion;
-                comidaCorrespondiente.imagen = item.imagen;
-                comidaCorrespondiente.calorias = item.calorias;
-                comidaCorrespondiente.tiempoPreparacion = item.tiempo_preparacion;
-            } else {
-                diaCorrespondiente.comidas.push({
-                    tipoComida: item.tipo_comida,
-                    titulo: item.titulo,
-                    descripcion: item.descripcion,
-                    imagen: item.imagen,
-                    calorias: item.calorias,
-                    tiempoPreparacion: item.tiempo_preparacion
-                });
-            }
-        }
-    });
-
-    return semanaCompleta;
-}*/
-
-function transformarSemana(fechaInicio: string, semanaDto: ICalendarWeekItemDto[]): IDia[] {
+function mapperResponseDTOToSemana(fechaInicio: string, semanaDto: ICalendarWeekItemDto[]): IDia[] {
     const plantilla = semanaVacia(fechaInicio);
 
     return plantilla.map(dia => {
@@ -77,7 +44,7 @@ function transformarSemana(fechaInicio: string, semanaDto: ICalendarWeekItemDto[
         return {
             ...dia,
             comidas: dia.comidas.map(comidaBase => {
-                const datosComida = datosDelDia.find(d => d.tipo_comida.toLowerCase() === comidaBase.tipoComida.toLowerCase());
+                const datosComida = datosDelDia.find(d => d.tipo_comida === comidaBase.tipoComida);
                 return (datosComida) ? {
                     ...comidaBase,
                     titulo: datosComida.titulo,
@@ -105,7 +72,7 @@ const useCalendario = () => {
             setError(null);
             try {
                 const result = await obtenerCalendarioSemanal(fechaActual);
-                const resultTransformado = transformarSemana(fechaActual, result);
+                const resultTransformado = mapperResponseDTOToSemana(fechaActual, result);
                 setSemana(resultTransformado);
             } catch (err: unknown) {
                 setError(err instanceof Error ? err.message : "Error al cargar el calendario");
