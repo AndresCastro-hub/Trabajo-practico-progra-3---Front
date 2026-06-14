@@ -9,7 +9,7 @@ interface EmptyComidaCardProps {
     fecha: string;
 }
 
-export function EmptyComidaCard({ tipoComida, fecha }: EmptyComidaCardProps) {
+export function EmptyComidaCard({ tipoComida, fecha }: EmptyComidaCardProps ) {
     return(
         <div className="w-full h-full min-h-[33vh]">
             <Dialog>

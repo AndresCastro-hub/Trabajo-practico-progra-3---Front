@@ -4,16 +4,22 @@ import { IReceta } from "../../recetario/types/recetario.types"
 
 interface SelectorRecetaProps {
     recetas: IReceta[];
-    onSearch: (busqueda: string) => void;
-    recetaSeleccionada: IReceta | null;
-    setRecetaSeleccionada: (receta: IReceta | null) => void;
-    hayMas: boolean;
-    loading: boolean;
-    busqueda: string;
-    handleCargarMas: () => void;
+    seleccion: {
+        actual: IReceta | null;
+        set: (receta: IReceta | null) => void;
+    };
+    busqueda: {
+        texto: string;
+        onSearch: (busqueda: string) => void;
+    };
+    paginacion: {
+        hayMas: boolean;
+        loading: boolean;
+        onCargarMas: () => void;
+    };
 }
 
-export function SelectorReceta({ recetas, onSearch, recetaSeleccionada, setRecetaSeleccionada, hayMas, loading, busqueda, handleCargarMas }: SelectorRecetaProps) {
+export function SelectorReceta({ recetas, seleccion, busqueda, paginacion }: SelectorRecetaProps) {
     const [open, setOpen] = useState<boolean>(false)
     const searchRef = useRef<HTMLInputElement>(null)
 
@@ -30,9 +36,9 @@ export function SelectorReceta({ recetas, onSearch, recetaSeleccionada, setRecet
                 onClick={() => setOpen(!open)}
                 className={`w-full flex items-center justify-between px-3 h-11 rounded-xl border transition-colors text-sm
                 ${open ? "border-green-500 ring-2 ring-green-500/20" : "border-slate-200 hover:border-slate-300"}
-                ${recetaSeleccionada ? "text-slate-900" : "text-slate-400"}`}
+                ${seleccion.actual ? "text-slate-900" : "text-slate-400"}`}
             >
-                <span>{recetaSeleccionada ? recetaSeleccionada.nombre : "Seleccionar receta"}</span>
+                <span>{seleccion.actual ? seleccion.actual.nombre : "Seleccionar receta"}</span>
                 <ChevronDown
                     size={14}
                     className={`text-slate-400 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
@@ -48,9 +54,9 @@ export function SelectorReceta({ recetas, onSearch, recetaSeleccionada, setRecet
                                 ref={searchRef}
                                 type="text"
                                 placeholder="Buscar receta..."
-                                defaultValue={busqueda}
+                                defaultValue={busqueda.texto}
                                 onKeyDown={(e) => {
-                                    if (e.key === "Enter") onSearch(e.currentTarget.value)
+                                    if (e.key === "Enter") busqueda.onSearch(e.currentTarget.value)
                                 }}
                                 className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-slate-50"
                             />
@@ -58,7 +64,7 @@ export function SelectorReceta({ recetas, onSearch, recetaSeleccionada, setRecet
                     </div>
 
                     <div className="max-h-52 overflow-y-auto">
-                        {loading ? (
+                        {(paginacion.loading && recetas.length === 0) ? (
                             <p className="text-sm text-slate-400 text-center py-4">Cargando...</p>
                         ) : recetas.length === 0 ? (
                             <p className="text-sm text-slate-400 text-center py-4">Sin resultados</p>
@@ -69,8 +75,8 @@ export function SelectorReceta({ recetas, onSearch, recetaSeleccionada, setRecet
                                         key={receta.id}
                                         type="button"
                                         onClick={() => {
-                                            onSearch(receta.nombre)
-                                            setRecetaSeleccionada(receta)
+                                            busqueda.onSearch(receta.nombre)
+                                            seleccion.set(receta)
                                             setOpen(false)
                                         }}
                                         className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-slate-50 transition-colors"
@@ -79,14 +85,15 @@ export function SelectorReceta({ recetas, onSearch, recetaSeleccionada, setRecet
                                     </button>
                                 ))}
                                 
-                                <button
-                                    type="button"
-                                    onClick={handleCargarMas}
-                                    disabled={!hayMas}
-                                    className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-slate-50 transition-colors"
-                                >
-                                    <span className="text-slate-800">Cargar mas...</span>
-                                </button>
+                                {paginacion.hayMas && ( 
+                                    <button
+                                        type="button"
+                                        onClick={paginacion.onCargarMas}
+                                        className="w-full px-3 py-2 text-xs font-medium text-green-600 hover:bg-green-50 border-t border-slate-100 transition-colors"
+                                    >
+                                        <span className="text-slate-800">Cargar mas...</span>
+                                    </button>
+                                )}
                             </>
                         )}
                     </div>

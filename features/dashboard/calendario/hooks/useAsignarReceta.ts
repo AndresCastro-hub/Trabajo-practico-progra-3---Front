@@ -3,7 +3,7 @@ import { ActiveTab, IReceta } from "@/features/dashboard/recetario/types/recetar
 import { obtenerTodasLasRecetas } from "@/features/dashboard/recetario/services/obtenerTodasLasRecetas";
 import { asignarRecetaACalendario } from "../service/calendarioService";
 
-export function useAsignarReceta(fecha: string, tipoComida: number) {
+export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: () => void) {
     const [filters, setFilters] = useState({
         tab: "plataforma" as ActiveTab,
         busqueda: "",
@@ -14,6 +14,7 @@ export function useAsignarReceta(fecha: string, tipoComida: number) {
     const [loading, setLoading] = useState(false);
     const [recetaSeleccionada, setRecetaSeleccionada] = useState<IReceta | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [recetaAsignada, setRecetaAsignando] = useState<IReceta | null>(null);
 
     useEffect(() => {
         const fetch = async () => {
@@ -32,7 +33,7 @@ export function useAsignarReceta(fecha: string, tipoComida: number) {
                 );
                 setHayMas(filters.page < result.totalPages);
             } catch (err) {
-                setError(err instanceof Error ? err.message : "Error al cargar recetas");
+                setError(err instanceof Error ? err.message : "Error al cargar las recetas")
             } finally {
                 setLoading(false);
             }
@@ -41,8 +42,10 @@ export function useAsignarReceta(fecha: string, tipoComida: number) {
 
     },[filters]);
 
-    const handleTabChange = (tab: ActiveTab) =>
+    const handleTabChange = (tab: ActiveTab) => {
         setFilters({ tab, busqueda: "", page: 1 });
+        setRecetaSeleccionada(null);
+    }
 
     const handleBusqueda = (busqueda: string) =>
         setFilters(prev => ({ ...prev, busqueda, page: 1 }));
@@ -52,11 +55,17 @@ export function useAsignarReceta(fecha: string, tipoComida: number) {
 
     const handleAsignar = async () => {
         if (!recetaSeleccionada) return;
-        await asignarRecetaACalendario({
-            fecha,
-            tipo_comida_id: tipoComida,
-            receta_id: recetaSeleccionada.id,
-        });
+        try{
+            await asignarRecetaACalendario({
+                fecha,
+                tipo_comida_id: tipoComida,
+                receta_id: recetaSeleccionada.id,
+            });
+            setRecetaAsignando(recetaSeleccionada);
+            onAsignado();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Error al cargar las recetas")
+        }
     };
 
     return {
@@ -64,6 +73,7 @@ export function useAsignarReceta(fecha: string, tipoComida: number) {
         recetaSeleccionada, setRecetaSeleccionada,
         activeTab: filters.tab,
         busqueda: filters.busqueda,
+        recetaAsignada,
         handleTabChange, handleBusqueda, handleCargarMas, handleAsignar,
     };
 }

@@ -1,25 +1,19 @@
 import { Activity, ChevronLeft, ChevronRight } from "lucide-react";
 import { useModoControl } from "@/context/ModoControlContext"
+import { rangoSemana } from "../utils/calendario.utils";
+import { useCalendarioContext } from "../context/CalendarioContext";
 import moment from 'moment';
 
-interface CalendarioHeaderProps {
-    fechaActual: string;
-    setFechaActual: (fecha: string) => void;
-}
-
-export function CalendarioHeader({fechaActual, setFechaActual}: CalendarioHeaderProps) {
-    
+export function CalendarioHeader() {
     const { modoControl, onToggleModoControl } = useModoControl();
-
-    const rangoSemana = (moment(fechaActual).format('MM') === moment(fechaActual).add(6, 'days').format('MM'))          ?
-        `${moment(fechaActual).format('DD')} al ${moment(fechaActual).add(6, 'days').format('D [de] MMMM')}`            :
-        `${moment(fechaActual).format('D [de] MMMM')} al ${moment(fechaActual).add(6, 'days').format('D [de] MMMM')}`;
+    const { fechaActual, setFechaActual } = useCalendarioContext();
+    const rangoSemanal = rangoSemana(fechaActual);
 
     return (
         <div className="flex flex-row justify-between items-center p-4">
             <div>
                 <h1 className="text-lg font-bold text-green-500">Vista semanal</h1>
-                <h2 className="text-xl font-bold">Semana del {rangoSemana}</h2>
+                <h2 className="text-xl font-bold">Semana del {rangoSemanal}</h2>
             </div>
             <div className="flex gap-2">
                 <div>

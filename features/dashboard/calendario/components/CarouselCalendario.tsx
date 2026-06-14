@@ -6,23 +6,19 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { IDia } from "../types/calendario.types";
+import { useCalendarioContext } from "../context/CalendarioContext";
 import { ComidasDelDia } from "./ComidasDelDia";
-import ErrorState from "@/components/ErrorState";
-import moment from 'moment';
 import { useRouter } from "next/navigation";
+import ErrorState from "@/components/ErrorState";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import moment from 'moment';
+import { isSemanaVacia } from "../utils/calendario.utils";
 
-interface CarouselCalendarioProps {
-    semana: IDia[];
-    loading: boolean;
-    error: string | null;
-}
-
-export function CarouselCalendario({semana, loading, error}: CarouselCalendarioProps) {
+export function CarouselCalendario() {
     const router = useRouter();
+    const { semana, loading, error } = useCalendarioContext();
 
-    if (loading) return ( <LoadingSpinner/> );
+    if (loading && isSemanaVacia(semana)) return ( <LoadingSpinner/> );
 
     if (error) return ( <ErrorState message={error} onBack={() => router.back()} /> );
 
@@ -35,7 +31,9 @@ export function CarouselCalendario({semana, loading, error}: CarouselCalendarioP
                             <div className="p-1 h-full">
                                 <Card className="h-full flex flex-col">
                                     <header className="flex flex-row justify-between items-center border-b px-4 pb-2 shrink-0">
-                                        <h3 className="text-lg font-semibold">{`${moment(dia.fecha).locale('es').format('ddd')} ${moment(dia.fecha).locale('es').format('DD')}`}</h3>
+                                        <h3 className="text-lg font-semibold">
+                                            {`${moment(dia.fecha).locale('es').format('ddd')} ${moment(dia.fecha).locale('es').format('DD')}`}
+                                        </h3>
                                     </header>
 
                                     <CardContent className="grid grid-rows-2 gap-5 flex-1 min-h-0 p-3">
