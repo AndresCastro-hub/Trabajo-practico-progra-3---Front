@@ -21,8 +21,9 @@ export interface IFormEdicion {
     tiempoDePreparacion: number
     descripcion: string
     ingredientes: IngredienteRow[]
-    ingredientesAgregados: IngredientDto[]
-    ingredientesEliminados: number[]
+    ingredientesAgregados?: IngredientDto[]
+    ingredientesEliminados?: number[]
+    ingredientesActualizados?: IngredientDto[]
 }
 
 export interface IngredientDto {

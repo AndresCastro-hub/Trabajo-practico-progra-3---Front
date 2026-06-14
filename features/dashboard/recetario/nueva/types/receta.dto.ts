@@ -20,4 +20,5 @@ export interface EditarRecetaDto{
 
     addedIngredients?: IngredientDto[];
 
+    updatedIngredients?: IngredientDto[]
 }

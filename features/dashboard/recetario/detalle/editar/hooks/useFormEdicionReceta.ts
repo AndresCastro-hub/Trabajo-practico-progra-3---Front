@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IFormEdicion, IngredienteRow } from "../../../nueva/types/receta.types";
 import useRecetaDetail from "../../hooks/useRecetaDetail";
 import { editarReceta } from "../services/EditRecipe";
@@ -21,10 +21,16 @@ export default function useFormEdicionReceta(id: string){
     const [success, setSuccess] = useState<boolean>(false)
     const router = useRouter()
 
+    const ingredientesIniciales = useRef<IngredienteRow[]>([])
     const { receta } = useRecetaDetail(id)
 
     useEffect(() => {
         if (!receta) return
+
+        ingredientesIniciales.current = receta.ingredientes.map((i) => ({
+            ingrediente: i.ingrediente,
+            cantidad: i.cantidad
+        }))
 
         setForm({
             tiempoDePreparacion: receta.tiempoPreparacion ?? 0,
@@ -33,21 +39,11 @@ export default function useFormEdicionReceta(id: string){
                 ingrediente: i.ingrediente,
                 cantidad: i.cantidad
             })),
-            ingredientesAgregados: [],
-            ingredientesEliminados: []
+            ingredientesAgregados: undefined,
+            ingredientesEliminados: undefined,
+            ingredientesActualizados: undefined
         })
     }, [receta])
-
-    function setIngredientesIniciales(){
-        if(!receta) return
-
-        return receta.ingredientes.map((i) => ({
-            ingrediente: i.ingrediente,
-            cantidad: i.cantidad
-        }))
-    }
-
-    const ingredientesIniciales = setIngredientesIniciales()
 
     const setTiempoDePreparacion = (tiempoDePreparacion: number) => {
         setForm((prev) => ({
@@ -68,11 +64,22 @@ export default function useFormEdicionReceta(id: string){
     const mapFormToRecetaEditarDto = (form: IFormEdicion) =>{
         const ingredientesNuevos = form.ingredientes
         .filter((i) =>
-            i.ingrediente?.id &&
-            !ingredientesIniciales?.some(
-                (inicial) => inicial.ingrediente.id === i.ingrediente?.id
+            i.ingrediente?.id && !ingredientesIniciales.current.some(
+                (inicial) => inicial.ingrediente?.id === i.ingrediente?.id
             )
         )
+        .map((i) => ({
+            ingrediente_id: i.ingrediente!.id,
+            cantidad: Number(i.cantidad)
+        }))
+
+        const ingredientesActualizar = form.ingredientes
+        .filter((i) => {
+            const inicial = ingredientesIniciales.current.find(
+                (ini) => ini.ingrediente?.id === i.ingrediente?.id
+            )
+            return inicial && inicial.cantidad !== i.cantidad
+        })
         .map((i) => ({
             ingrediente_id: i.ingrediente!.id,
             cantidad: Number(i.cantidad)
@@ -83,6 +90,7 @@ export default function useFormEdicionReceta(id: string){
             prepTime: form.tiempoDePreparacion,
             deletedIngredientsId: form.ingredientesEliminados,
             addedIngredients: ingredientesNuevos,
+            updatedIngredients: ingredientesActualizar
         }
         return dto
     }
@@ -104,8 +112,9 @@ export default function useFormEdicionReceta(id: string){
         return {
             ...prev,
             ingredientes: prev.ingredientes.filter((_, i) => i !== index),
+
             ingredientesEliminados: ingredienteAEliminar.ingrediente?.id
-                ? [...prev.ingredientesEliminados, ingredienteAEliminar.ingrediente.id]
+                ? [...(prev.ingredientesEliminados ?? []), ingredienteAEliminar.ingrediente.id]
                 : prev.ingredientesEliminados
         }
     })

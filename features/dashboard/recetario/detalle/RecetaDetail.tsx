@@ -21,7 +21,7 @@ export default function RecetaDetail() {
     }
 
     const esDePlataforma = () =>{
-        return false
+        return receta?.idUsuario === 1
     }
 
     const handleEliminar = async () => {
