@@ -1,6 +1,7 @@
 import { useLoginForm } from "@/features/auth/login/hooks/useLoginForms";
 import { loginService } from "@/features/auth/login/services/loginService";
 import { renderHook, act } from "@testing-library/react";
+import { jwtDecode } from "jwt-decode";
 
 
 jest.mock("@/features/auth/login/services/loginService");
@@ -8,6 +9,11 @@ jest.mock("next/navigation", () => ({
     useRouter: () => ({ push: jest.fn() }),
 }));
 
+jest.mock("jwt-decode", () => ({
+    jwtDecode: jest.fn()
+}));
+
+const mockJwtDecode = jwtDecode as jest.Mock;
 const mockLoginService = loginService as jest.MockedFunction<typeof loginService>;
 
 describe("useLoginForm", () => {
@@ -49,6 +55,7 @@ describe("useLoginForm", () => {
 
     it("no setea serverError si el servicio es exitoso", async () => {
         mockLoginService.mockResolvedValue({ accessToken: "token123" });
+        mockJwtDecode.mockReturnValue({ rol: "usuario" }); // ← agregás esto
         Object.defineProperty(document, "cookie", { writable: true, value: "" });
 
         const { result } = renderHook(() => useLoginForm());
