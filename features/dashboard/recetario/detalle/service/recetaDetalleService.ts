@@ -8,9 +8,5 @@ export const getRecetaById = async (id: string): Promise<IRecetaDetalle> => {
         }
     })
 
-    if (!response.ok) {
-        throw new Error("No se encontró la receta")
-    }
-
     return response.json()
 }

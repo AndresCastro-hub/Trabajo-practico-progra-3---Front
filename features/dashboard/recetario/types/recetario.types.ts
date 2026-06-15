@@ -35,3 +35,10 @@ export interface IIngredienteDetalle {
 export interface IRecetaDetalle extends IReceta {
     ingredientes: IIngredienteDetalle[]
 }
+
+export interface IJwtPayload {
+  id: number;
+  email: string;
+  rol: string;
+  name: string
+}

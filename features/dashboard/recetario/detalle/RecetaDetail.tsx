@@ -7,20 +7,30 @@ import RecetaActions from "./components/RecetaActions"
 import RecetaIngredients from "./components/RecetaIngredients"
 import ErrorState from "@/components/ErrorState"
 import LoadingSpinner from "@/components/LoadingSpinner"
+import { eliminarReceta } from "./service/eliminarReceta"
 
 export default function RecetaDetail() {
     const router = useRouter()
     const params = useParams()
     const id = params.id as string
-
+    
     const { receta, loading, error } = useRecetaDetail(id)
 
     const handleEditar = () => {
-        // router.push(`/recetario/${id}/editar`)
+        router.push(`/recetario/${id}/editar`)
     }
 
-    const handleEliminar = () => {
-        // eliminar
+    const esDePlataforma = () =>{
+        return receta?.idUsuario === 1
+    }
+
+    const handleEliminar = async () => {
+        try{
+            await eliminarReceta(id)
+            router.push("/recetario")
+        }catch{
+            throw new Error('Error al eliminar la receta');
+        }
     }
 
     if (loading) return <LoadingSpinner />
@@ -40,7 +50,7 @@ export default function RecetaDetail() {
                         <span className="text-sm font-medium">Volver</span>
                     </button>
 
-                    <RecetaActions onEditar={handleEditar} onEliminar={handleEliminar} />
+                    {!esDePlataforma() && <RecetaActions onEditar={handleEditar} onEliminar={handleEliminar} />}
 
                 </div>
 
@@ -71,9 +81,6 @@ export default function RecetaDetail() {
                         <RecetaIngredients ingredientes={receta.ingredientes} />
 
                     </div>
-
-
-
                 </div>
             </div>
         </section>

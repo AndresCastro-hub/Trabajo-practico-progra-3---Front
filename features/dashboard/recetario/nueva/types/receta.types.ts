@@ -16,3 +16,17 @@ export interface IForm {
     ingredientes: IngredienteRow[]
     imagen: File | null
 }
+
+export interface IFormEdicion {
+    tiempoDePreparacion: number
+    descripcion: string
+    ingredientes: IngredienteRow[]
+    ingredientesAgregados?: IngredientDto[]
+    ingredientesEliminados?: number[]
+    ingredientesActualizados?: IngredientDto[]
+}
+
+export interface IngredientDto {
+    ingrediente_id: number
+    cantidad: number
+}
