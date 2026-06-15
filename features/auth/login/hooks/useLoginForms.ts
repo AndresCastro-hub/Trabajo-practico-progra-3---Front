@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "../services/loginService";
+import { jwtDecode } from "jwt-decode";
 
 interface FormStateLogin {
     email: string
@@ -28,8 +29,13 @@ export function useLoginForm() {
         try {
             const data = await loginService({ email, password });
             document.cookie = `token=${data.accessToken}; path=/; SameSite=Strict`
-            router.push("/calendario");
+            const decoded = jwtDecode<{ rol: string }>(data.accessToken);
 
+            if (decoded.rol === "administrador") {
+                router.push("/admin");
+            } else {
+                router.push("/calendario");
+            }
         } catch (error) {
             if (error instanceof Error) {
                 setServerError(error.message);
