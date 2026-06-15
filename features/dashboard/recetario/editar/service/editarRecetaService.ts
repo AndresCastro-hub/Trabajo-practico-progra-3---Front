@@ -1,5 +1,5 @@
 import { getTokenFromCookie } from "@/hooks/useAuth";
-import { IEditarRecetaDTO } from "../types/editarTypes";
+import { IEditarRecetaDTO } from "../types/editar.types";
 import { INestError } from "@/interface/apiResponse";
 
 export const editarReceta = async (data: IEditarRecetaDTO, id: string) => {

@@ -1,6 +1,6 @@
 import { INestError } from "@/interface/apiResponse";
 import { getTokenFromCookie } from "@/hooks/useAuth";
-import { IIngredient, IIngredientResponse, IIngredientService } from "../types/adminTypes";
+import { IIngredient, IIngredientResponse, IIngredientService } from "../types/admin.types";
 
 export async function postIngredient({ nombre, unidad }: IIngredientService): Promise<IIngredient> {
     try {

@@ -1,5 +1,5 @@
 import { getTokenFromCookie } from "@/hooks/useAuth"
-import { IForm, IngredienteRow } from "../types/editarTypes"
+import { IForm, IngredienteRow } from "../types/editar.types"
 
 export const initialFetch = async (id: string): Promise<IForm> => {
     const response = await fetch(`http://localhost:5000/recipes/${id}`,{

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { IEditarRecetaDTO, IForm, IngredienteRow } from "../types/editarTypes"
+import { IEditarRecetaDTO, IForm, IngredienteRow } from "../types/editar.types"
 import { INestError } from "@/interface/apiResponse"
 import { initialFetch } from "../service/initialFetch"
 import { editarReceta } from "../service/editarRecetaService"
