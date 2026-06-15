@@ -8,7 +8,7 @@ Aplicación web construida con Next.js que permite a los usuarios gestionar su p
 
 La app maneja dos roles, controlados via middleware de Next.js (`middleware.ts`):
 
-- **usuario** — accede a `/calendario`, `/recetario` y `/compras`
+- **usuario** — accede a `/calendario` y `/recetario`
 - **administrador** — accede a `/admin`
 
 Al iniciar sesión, el token JWT es decodificado y el usuario es redirigido automáticamente según su rol. Las rutas están protegidas: si un usuario intenta acceder a una ruta que no le corresponde, es redirigido a `/calendario`.
