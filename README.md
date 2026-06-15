@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend - Trabajo Práctico Progra3
 
-## Getting Started
+## ¿Qué hace la app?
 
-First, run the development server:
+Aplicación web construida con Next.js que permite a los usuarios gestionar su plan de comidas semanal. Los usuarios pueden crear y administrar recetas, asignarlas a su calendario semanal (almuerzo y cena) y consultar información nutricional. Los administradores tienen acceso a un panel de gestión de la plataforma.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Sistema de Roles
+
+La app maneja dos roles, controlados via middleware de Next.js (`middleware.ts`):
+
+- **usuario** — accede a `/calendario`, `/recetario` y `/compras`
+- **administrador** — accede a `/admin`
+
+Al iniciar sesión, el token JWT es decodificado y el usuario es redirigido automáticamente según su rol. Las rutas están protegidas: si un usuario intenta acceder a una ruta que no le corresponde, es redirigido a `/calendario`.
+
+## Estructura de carpetas
+
+La app usa una arquitectura **por features**. Cada feature agrupa sus propios componentes, hooks y services.
+
+```
+src/
+├── app/                        # Rutas de Next.js (App Router)
+│   ├── (auth)/                 # Rutas públicas (login, registro)
+│   └── (dashboard)/            # Rutas protegidas por rol
+│
+├── components/                 # Componentes globales reutilizables
+│   ├── navigation/             # Navbar, sidebar
+│   ├── ui/                     # Componentes genéricos (Header, Spinner, Pagination, etc.)
+│   └── ...
+│
+├── context/                    # Contextos globales de React
+│
+├── features/                   # Lógica agrupada por dominio
+│   ├── auth/                   # Login y registro
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── services/
+│   └── dashboard/
+│       ├── admin/              # Panel de administración
+│       ├── calendario/         # Vista y lógica del calendario semanal
+│       │   └── components/
+│       └── recetario/          # Gestión de recetas
+│           ├── components/     # Componentes de la lista de recetas
+│           ├── detalle/        # Vista de detalle de una receta
+│           ├── editar/         # Formulario de edición
+│           ├── nueva/          # Formulario de nueva receta
+│           ├── hooks/          # Hooks específicos del recetario
+│           ├── services/       # Llamadas a la API
+│           └── types/          # Tipos TypeScript del dominio
+│
+├── hooks/                      # Hooks globales (ej: useAuth)
+├── interface/                  # Interfaces y tipos globales
+└── middleware.ts               # Control de acceso por rol
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Convención dentro de cada feature
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **components/** — componentes visuales de esa feature
+- **hooks/** — lógica de estado y efectos (ej: `useRecetario`, `useLoginForm`)
+- **services/** — funciones que llaman a la API del backend (fetch)
+- **types/** — interfaces y tipos TypeScript propios del dominio
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Cómo levantar la app
 
-## Learn More
+1. Instalar dependencias:
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Ejecutar en modo desarrollo:
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. La app corre en `http://localhost:3000`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> El backend debe estar corriendo en `http://localhost:5000` antes de levantar el frontend.
 
-## Deploy on Vercel
+## Tests
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run test
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Para correr en modo watch:
+```bash
+npm run test -- --watch
+```
+
+El proyecto usa **Jest** como framework de testing.
