@@ -27,7 +27,7 @@ export function CarouselCalendario() {
             <CarouselContent className="h-full" >
                 {semana.map((dia) => {
                     return(
-                        <CarouselItem key={`${dia.fecha}`} className="h-full basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                        <CarouselItem key={`${dia.fecha}`} className="h-full basis-full sm:basis-65/100 lg:basis-38/100 xl:basis-1/4">
                             <div className="p-1 h-full">
                                 <Card className="h-full flex flex-col">
                                     <header className="flex flex-row justify-between items-center border-b px-4 pb-2 shrink-0">
