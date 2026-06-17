@@ -131,7 +131,6 @@ describe("useFormEditarReceta", () => {
             const { result } = renderHook(() => useFormEditarReceta("1"));
             await waitFor(() => expect(result.current.loading).toBe(false));
 
-            // eliminar el ingrediente id=1
             act(() => result.current.eliminarIngrediente(0));
 
             await act(async () => { await result.current.handleSubmit(); });
@@ -150,7 +149,6 @@ describe("useFormEditarReceta", () => {
             const { result } = renderHook(() => useFormEditarReceta("1"));
             await waitFor(() => expect(result.current.loading).toBe(false));
 
-            // agregar nuevo ingrediente id=2
             act(() => result.current.agregarIngrediente());
             act(() => result.current.actualizarIngrediente(0, "ingrediente", { id: 2, nombre: "Sal", unidad: "g" }));
             act(() => result.current.actualizarIngrediente(0, "cantidad", "10"));
