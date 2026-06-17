@@ -25,5 +25,7 @@ export interface IngredientDto {
 export interface IEditarRecetaDTO {
     description: string;
     prepTime: number;
+    deletedIngredientsId: number[];
     addedIngredients: IngredientDto[];
+    updatedIngredients: IngredientDto[];
 }
