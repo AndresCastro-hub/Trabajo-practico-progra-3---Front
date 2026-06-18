@@ -19,6 +19,7 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
     useEffect(() => {
         const fetch = async () => {
             setLoading(true);
+            setError(null);
             try {
                 const result = await obtenerTodasLasRecetas({
                     page: filters.page - 1,

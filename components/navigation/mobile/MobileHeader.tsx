@@ -10,7 +10,7 @@ import SideBarNav from "../SideBarNav/SideBarNav"
 const pageTitles: Record<string, string> = {
   "/calendario": "Plan Semanal",
   "/recetario": "Recetario",
-  "/compras": "Compras",
+  // "/compras": "Compras",
   "/admin": "Admin",
 }
 

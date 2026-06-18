@@ -7,7 +7,6 @@ import useFormEdicionReceta from "./hooks/useFormEdicionReceta";
 import { useParams } from "next/navigation";
 import TiempoDePreparacion from "../../nueva/components/Form/TiempoDePreparacion";
 import IngredientesForm from "../../nueva/components/Ingredientes/IngredientesForm";
-import PantallaNotificacion from "../../nueva/components/Form/PantallaNotificacion";
 
 export default function FormEdicionReceta(){
     const router = useRouter();
@@ -26,14 +25,9 @@ export default function FormEdicionReceta(){
         handleEdicion,
         puedeEditar,
         loading,
-        success,
-        error,
-        clearFeedback
     } = useFormEdicionReceta(id)
     return(
         <div className="min-h-screen bg-slate-50">
-
-            <PantallaNotificacion success={success} error={error} clearFeedback={clearFeedback}/>
 
             {loading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
