@@ -1,5 +1,4 @@
 "use client";
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus } from 'lucide-react';
 import { AsignarRecetaForm } from './AsignarRecetaForm'
@@ -9,26 +8,23 @@ interface EmptyComidaCardProps {
     fecha: string;
 }
 
-export function EmptyComidaCard({ tipoComida, fecha }: EmptyComidaCardProps ) {
-    return(
-        <div className="w-full h-full min-h-[33vh]">
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline" className="border-2 border-dashed rounded-2xl w-full h-full flex flex-col gap-2">
-                        <Plus size={500} className="text-gray-600" />
-                        <span className="text-xl font-semibold text-gray-600">{` Agregar ${tipoComida}`}</span>
-                    </Button>
-                </DialogTrigger>
+export function EmptyComidaCard({ tipoComida, fecha }: EmptyComidaCardProps) {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <button className="w-full border-2 border-dashed border-gray-200 rounded-2xl py-6 flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:border-green-400 hover:text-green-500 hover:bg-green-50 transition-all cursor-pointer">
+                    <Plus className="w-5 h-5" />
+                    <span className="text-sm font-medium">+ {tipoComida}</span>
+                </button>
+            </DialogTrigger>
 
-                <DialogContent className="bg-white border border-border rounded-xl min-h-[33vh] flex flex-col">
-                    <DialogHeader>
-                        <DialogTitle className='text-center text-gray-600 text-lg'>Asignar Receta</DialogTitle>
-                        <hr/>
-                    </DialogHeader>
-                
-                    <AsignarRecetaForm fecha={fecha} tipoComida={tipoComida} />
-                </DialogContent>
-            </Dialog>
-        </div>
+            <DialogContent className="bg-white border border-border rounded-xl flex flex-col">
+                <DialogHeader>
+                    <DialogTitle className="text-center text-gray-600 text-lg">Asignar Receta</DialogTitle>
+                    <hr />
+                </DialogHeader>
+                <AsignarRecetaForm fecha={fecha} tipoComida={tipoComida} />
+            </DialogContent>
+        </Dialog>
     );
 }

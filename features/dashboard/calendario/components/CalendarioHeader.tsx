@@ -12,8 +12,8 @@ export function CalendarioHeader() {
     return (
         <div className="flex flex-row justify-between items-center p-4">
             <div>
-                <h1 className="text-lg font-bold text-green-500">Vista semanal</h1>
-                <h2 className="text-xl font-bold">Semana del {rangoSemanal}</h2>
+                <h1 className="text-2xl font-bold text-green-500">Vista semanal</h1>
+                <h2 className="text-3xl font-bold text-slate-900">Semana del {rangoSemanal}</h2>
             </div>
             <div className="flex gap-2">
                 <div>
