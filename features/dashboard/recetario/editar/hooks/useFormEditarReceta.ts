@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react"
-import { IEditarRecetaDTO, IForm, IngredienteRow } from "../types/editar.types"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { IEditarRecetaDTO, IForm, IngredientDto, IngredienteRow } from "../types/editar.types"
 import { INestError } from "@/interface/apiResponse"
 import { initialFetch } from "../service/initialFetch"
 import { editarReceta } from "../service/editarRecetaService"
@@ -13,6 +13,8 @@ export default function useFormEditarReceta(id: string) {
         imagen_url: ''
     };
 
+    const recetaOriginal = useRef<IForm>(INITIAL_FORM);
+
     const [form, setForm] = useState<IForm>(INITIAL_FORM);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
@@ -24,6 +26,7 @@ export default function useFormEditarReceta(id: string) {
         try {
             const data = await initialFetch(id);
             setForm(data);
+            recetaOriginal.current = data;
         } catch (err: unknown) {
                 setError(err instanceof Error ? err.message : "Error al cargar la receta");
         } finally {
@@ -77,14 +80,42 @@ export default function useFormEditarReceta(id: string) {
         }));
     }
 
-    const mapFormToEditarRecetaDTO = (form: IForm): IEditarRecetaDTO => {
+    const mapDatosFormToEditarRecetaDTO = (form: IForm): IEditarRecetaDTO => {
+        const idsIngredientesEliminados: number[] = recetaOriginal.current.ingredientes.filter((ingredienteOriginal) => {
+            if (!ingredienteOriginal.ingrediente) return false;
+            return !form.ingredientes.some((i) => (i.ingrediente?.id === ingredienteOriginal.ingrediente!.id));
+        })
+        .map((ingredienteEliminado) => ingredienteEliminado.ingrediente!.id);
+
+        const ingredientesNuevos: IngredientDto[] = form.ingredientes.filter((ingredienteDelForm) => {
+            if (!ingredienteDelForm.ingrediente) return false;
+            return !recetaOriginal.current.ingredientes.some((ingredienteOriginal) => ingredienteOriginal.ingrediente?.id === ingredienteDelForm.ingrediente?.id);
+        })
+        .map((ingredienteNuevo) => ({
+            ingrediente_id: ingredienteNuevo.ingrediente!.id,
+            cantidad: Number(ingredienteNuevo.cantidad)
+        }));
+
+        const ingredientesActualizar: IngredientDto[] = form.ingredientes.filter((ingredienteDelForm) => {
+            if (!ingredienteDelForm.ingrediente) return false;
+            return recetaOriginal.current.ingredientes.some((ingredienteOriginal) => {
+                return(
+                    ingredienteOriginal.ingrediente?.id === ingredienteDelForm.ingrediente?.id
+                    && Number(ingredienteOriginal.cantidad) !== Number(ingredienteDelForm.cantidad)
+                );
+            });
+        })
+        .map((ingredientesAActualizar) => ({
+            ingrediente_id: ingredientesAActualizar.ingrediente!.id,
+            cantidad: Number(ingredientesAActualizar.cantidad)
+        }))
+
         return {
             description: form.descripcion,
             prepTime: form.tiempoPreparacion,
-            addedIngredients: form.ingredientes.map((i) => ({
-                ingrediente_id: i.ingrediente!.id,
-                cantidad: Number(i.cantidad)
-            }))
+            deletedIngredientsId: idsIngredientesEliminados,
+            addedIngredients: ingredientesNuevos,
+            updatedIngredients: ingredientesActualizar
         };
     }
 
@@ -93,7 +124,7 @@ export default function useFormEditarReceta(id: string) {
         setError(null);
         setSuccess(false);
         try {
-            const payload = mapFormToEditarRecetaDTO(form);
+            const payload = mapDatosFormToEditarRecetaDTO(form);
             await editarReceta(payload, id);
             setSuccess(true);
         } catch (e) {

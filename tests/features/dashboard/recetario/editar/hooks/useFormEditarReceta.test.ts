@@ -13,7 +13,7 @@ const mockForm = {
     nombre: "Milanesa",
     tiempoPreparacion: 30,
     descripcion: "Clásica milanesa",
-    imagen_url: "https://www.josimar.com.ar/milanesa-pollo-frita-kg-2/p?srsltid=AfmBOooW7HI4bBryV28HxICIjREUF7qQZ7Gpyq5Cz_Xa2J70gz3kPIR9",
+    imagen_url: "https://imagen.com/milanesa.jpg",
     ingredientes: [
         { ingrediente: { id: 1, nombre: "Carne", unidad: "g" }, cantidad: "300" }
     ]
@@ -42,7 +42,6 @@ describe("useFormEditarReceta", () => {
             const { result } = renderHook(() => useFormEditarReceta("1"));
 
             expect(result.current.loading).toBe(true);
-
             await waitFor(() => expect(result.current.loading).toBe(false));
         });
 
@@ -109,8 +108,8 @@ describe("useFormEditarReceta", () => {
         });
     });
 
-    describe("handleSubmit", () => {
-        it("llama a editarReceta con el payload correcto", async () => {
+    describe("handleSubmit — payload (mapDatosFormToEditarRecetaDTO)", () => {
+        it("sin cambios: todas las listas vacías", async () => {
             const { result } = renderHook(() => useFormEditarReceta("1"));
             await waitFor(() => expect(result.current.loading).toBe(false));
 
@@ -120,12 +119,103 @@ describe("useFormEditarReceta", () => {
                 {
                     description: "Clásica milanesa",
                     prepTime: 30,
-                    addedIngredients: [{ ingrediente_id: 1, cantidad: 300 }]
+                    deletedIngredientsId: [],
+                    addedIngredients: [],
+                    updatedIngredients: [],
                 },
                 "1"
             );
         });
 
+        it("ingrediente eliminado: aparece en deletedIngredientsId", async () => {
+            const { result } = renderHook(() => useFormEditarReceta("1"));
+            await waitFor(() => expect(result.current.loading).toBe(false));
+
+            act(() => result.current.eliminarIngrediente(0));
+
+            await act(async () => { await result.current.handleSubmit(); });
+
+            expect(mockEditarReceta).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    deletedIngredientsId: [1],
+                    addedIngredients: [],
+                    updatedIngredients: [],
+                }),
+                "1"
+            );
+        });
+
+        it("ingrediente nuevo: aparece en addedIngredients", async () => {
+            const { result } = renderHook(() => useFormEditarReceta("1"));
+            await waitFor(() => expect(result.current.loading).toBe(false));
+
+            act(() => result.current.agregarIngrediente());
+            act(() => result.current.actualizarIngrediente(0, "ingrediente", { id: 2, nombre: "Sal", unidad: "g" }));
+            act(() => result.current.actualizarIngrediente(0, "cantidad", "10"));
+
+            await act(async () => { await result.current.handleSubmit(); });
+
+            expect(mockEditarReceta).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    deletedIngredientsId: [],
+                    addedIngredients: [{ ingrediente_id: 2, cantidad: 10 }],
+                    updatedIngredients: [],
+                }),
+                "1"
+            );
+        });
+
+        it("cantidad modificada: aparece en updatedIngredients", async () => {
+            const { result } = renderHook(() => useFormEditarReceta("1"));
+            await waitFor(() => expect(result.current.loading).toBe(false));
+
+            act(() => result.current.actualizarIngrediente(0, "cantidad", "500"));
+
+            await act(async () => { await result.current.handleSubmit(); });
+
+            expect(mockEditarReceta).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    deletedIngredientsId: [],
+                    addedIngredients: [],
+                    updatedIngredients: [{ ingrediente_id: 1, cantidad: 500 }],
+                }),
+                "1"
+            );
+        });
+
+        it("combinación: eliminar, agregar y modificar en el mismo submit", async () => {
+            mockInitialFetch.mockResolvedValue({
+                ...mockForm,
+                ingredientes: [
+                    { ingrediente: { id: 1, nombre: "Carne", unidad: "g" }, cantidad: "300" },
+                    { ingrediente: { id: 2, nombre: "Pan", unidad: "g" }, cantidad: "100" },
+                ]
+            });
+
+            const { result } = renderHook(() => useFormEditarReceta("1"));
+            await waitFor(() => expect(result.current.loading).toBe(false));
+
+
+            act(() => result.current.eliminarIngrediente(1));
+            act(() => result.current.actualizarIngrediente(0, "cantidad", "500"));
+            act(() => result.current.agregarIngrediente());
+            act(() => result.current.actualizarIngrediente(0, "ingrediente", { id: 3, nombre: "Sal", unidad: "g" }));
+            act(() => result.current.actualizarIngrediente(0, "cantidad", "10"));
+
+            await act(async () => { await result.current.handleSubmit(); });
+
+            expect(mockEditarReceta).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    deletedIngredientsId: [2],
+                    addedIngredients: [{ ingrediente_id: 3, cantidad: 10 }],
+                    updatedIngredients: [{ ingrediente_id: 1, cantidad: 500 }],
+                }),
+                "1"
+            );
+        });
+    });
+
+    describe("handleSubmit — estados", () => {
         it("setea success en true si el submit es exitoso", async () => {
             const { result } = renderHook(() => useFormEditarReceta("1"));
             await waitFor(() => expect(result.current.loading).toBe(false));
@@ -136,7 +226,7 @@ describe("useFormEditarReceta", () => {
             expect(result.current.error).toBeNull();
         });
 
-        it("setea error si el submit falla", async () => {
+        it("setea error si el submit falla con mensaje string", async () => {
             mockEditarReceta.mockRejectedValue({ message: "Error del servidor" });
 
             const { result } = renderHook(() => useFormEditarReceta("1"));
@@ -148,15 +238,15 @@ describe("useFormEditarReceta", () => {
             expect(result.current.success).toBe(false);
         });
 
-        it("setea error como string unido si message es un array", async () => {
-            mockEditarReceta.mockRejectedValue({ message: "Campo requerido, valor inválido" });
+        it("setea error unido con coma si message es array", async () => {
+            mockEditarReceta.mockRejectedValue({ message: ["Campo requerido", "Valor inválido"] });
 
             const { result } = renderHook(() => useFormEditarReceta("1"));
             await waitFor(() => expect(result.current.loading).toBe(false));
 
             await act(async () => { await result.current.handleSubmit(); });
 
-            expect(result.current.error).toBe("Campo requerido, valor inválido");
+            expect(result.current.error).toBe("Campo requerido, Valor inválido");
         });
     });
 
