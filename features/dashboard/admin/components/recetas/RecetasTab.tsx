@@ -20,7 +20,7 @@ const columnas: IColumn<IReceta>[] = [
 
 export default function RecetasTab() {
     const router = useRouter();
-    const { recetas, actualPage, totalPages, handlePageChange, handleSearch } = useRecetario();
+    const { recetas, actualPage, totalPages, loading, error, handlePageChange, handleSearch } = useRecetario();
     
     return (
         <>
@@ -31,9 +31,11 @@ export default function RecetasTab() {
                 getKey={(receta) => receta.nombre}
                 onEdit={(receta) => router.push(`/admin/editar/${receta.id}`)}
                 onDelete={() => window.alert("Próximamente")}
+                loading={loading}
+                error={error}
             />
 
-            {recetas.length > 0 && (
+            {(!loading && recetas.length > 0) && (
                 <Pagination current={actualPage} lastPage={Math.ceil(totalPages)} onPageChange={handlePageChange} />
             )}
         </>

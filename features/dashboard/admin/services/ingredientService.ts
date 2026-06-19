@@ -16,7 +16,7 @@ export async function postIngredient({ nombre, unidad }: IIngredientService): Pr
             throw new Error(message || "Error en registrar el ingrediente");
         }
 
-        const data: IIngredient = await response.json()
+        const data: IIngredient = await response.json();
 
         return data;
 
@@ -48,6 +48,8 @@ export async function getIngredients(page: number, name?: string): Promise<IIngr
         }
 
         const data: IIngredientResponse = await response.json()
+
+        if(data.ingredients.length === 0 ) throw new Error("No se encontraron ingredientes.");
 
         return data;
 

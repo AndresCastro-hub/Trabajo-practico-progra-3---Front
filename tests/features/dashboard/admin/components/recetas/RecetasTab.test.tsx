@@ -43,7 +43,7 @@ beforeEach(() => {
 
 afterEach(() => jest.clearAllMocks());
 
-describe("RecetasTab - renderizado", () => {
+describe("RecetasTab: renderizado", () => {
     it("renderiza el buscador", () => {
         render(<RecetasTab />);
         expect(screen.getByPlaceholderText("Buscar por nombre...")).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe("RecetasTab - renderizado", () => {
     });
 });
 
-describe("RecetasTab - paginación condicional", () => {
+describe("RecetasTab: paginación condicional", () => {
     it("muestra paginación si hay recetas", () => {
         render(<RecetasTab />);
         expect(screen.getByText("1")).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe("RecetasTab - paginación condicional", () => {
     });
 });
 
-describe("RecetasTab - interacciones", () => {
+describe("RecetasTab: interacciones", () => {
     it("navega a /recetario/nueva al hacer click en nueva receta", async () => {
         const user = userEvent.setup();
         render(<RecetasTab />);

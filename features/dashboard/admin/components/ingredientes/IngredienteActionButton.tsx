@@ -7,7 +7,7 @@ export default function IngredienteActionButton() {
         <Dialog>
             <DialogTrigger asChild>
                 <Button className="h-[50px] px-6 shrink-0">
-                + Nuevo Ingrediente
+                    + Nuevo Ingrediente
                 </Button>
             </DialogTrigger>
             
