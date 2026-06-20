@@ -1,24 +1,9 @@
-import { INestError } from "@/interface/apiResponse";
 import { CrearRecetaDTO } from "../types/receta.dto";
 import { getTokenFromCookie } from "@/hooks/useAuth";
+import { http } from "@/lib/utils/httpClient";
 
 export const crearReceta = async (data: CrearRecetaDTO) => {
-
-    const response = await fetch('http://localhost:5000/recipes', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${getTokenFromCookie()}`
-        },
-        body: JSON.stringify(data)
-    })
-
-    if (!response.ok) {
-        const error: INestError = await response.json()
-        throw error
-    }
-
-    return response.json()
+    return http.post("/recipes", data);
 }
 
 export const subirImagenReceta = async (recetaId: number, imagen: File) => {
