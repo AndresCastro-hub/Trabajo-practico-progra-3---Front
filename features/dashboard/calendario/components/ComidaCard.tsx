@@ -8,6 +8,9 @@ import { EliminarReceta, IComida } from "../types/calendario.types";
 import { useModoControl } from "@/context/ModoControlContext"
 import { eliminarRecetaDeCalendario } from "../service/calendarioService";
 import { useCalendarioContext } from "../context/CalendarioContext";
+import { TIPO_COMIDA_MAP } from "../constants/calendario.constants";
+import { EditarDialog } from "./editarDialog";
+import { useState } from "react";
 
 interface IComidaCard{
     receta: IComida
@@ -16,9 +19,9 @@ interface IComidaCard{
 export function ComidaCard({receta, fecha}: IComidaCard) {
     const { modoControl } = useModoControl();
     const { refrescar } = useCalendarioContext();
-
+    const [openEditar, setOpenEditar] = useState(false);
     const handleEliminar = ()=>{
-        const tipoComidaId = receta.tipoComida === 'Almuerzo' ? 1 : 2;
+        const tipoComidaId = TIPO_COMIDA_MAP[receta.tipoComida]
 
         const dtoDelete: EliminarReceta= {
             tipo_comida_id: tipoComidaId,
@@ -38,16 +41,15 @@ export function ComidaCard({receta, fecha}: IComidaCard) {
                     </span>
                     {receta.tipoComida}
                 </CardTitle>
-                
                 <CardAction className="flex flex-row gap-1 items-center">
                     <Button
-                        onClick={() => { /* Editar comida*/ }}
+                        onClick={() => setOpenEditar(true)}
                         size="icon-sm"
                         className="border border-gray-300 rounded-xl bg-green-500 text-white hover:bg-green-600 transition-colors"
                     >
-                        <Pencil />
+                    <Pencil />
                     </Button>
-                    
+
                     <Button
                         onClick={handleEliminar}
                         size="icon-sm"
@@ -87,6 +89,12 @@ export function ComidaCard({receta, fecha}: IComidaCard) {
                     </div>
                 </div>
             </CardContent>
+            <EditarDialog
+                open={openEditar}
+                onOpenChange={setOpenEditar}
+                fecha={fecha}
+                tipoComida={receta.tipoComida}
+            />
         </Card>
     );
 }

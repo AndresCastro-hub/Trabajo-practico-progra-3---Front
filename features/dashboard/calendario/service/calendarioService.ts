@@ -39,6 +39,25 @@ export const asignarRecetaACalendario = async (data: AsignarRecetaDTO) => {
     return response.json();
 }
 
+export const EditarRecetaDelCalendario = async (dto: AsignarRecetaDTO) => {
+
+    const response = await fetch(`http://localhost:5000/Calendar`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getTokenFromCookie()}`
+        },
+        body: JSON.stringify(dto),
+    })
+    
+    if (!response.ok) {
+        const error: INestError = await response.json();
+        throw error;
+    }
+
+    return response.json();
+}
+
 export const eliminarRecetaDeCalendario = async(dto: EliminarReceta) =>{
     const response = await fetch(`http://localhost:5000/Calendar`, {
         method: 'DELETE',
