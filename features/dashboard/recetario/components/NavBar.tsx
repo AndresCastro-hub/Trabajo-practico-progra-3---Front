@@ -13,8 +13,8 @@ export default function NavBar({ activeTab, handleTabChange, onSearch }: INavBar
     const { modoControl, onToggleModoControl } = useModoControl()
 
     return (
-        <nav className="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between gap-4">
-            <div className="relative w-72">
+        <nav className="bg-white border-b border-gray-100 px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="relative w-full sm:w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                     type="text"
@@ -26,7 +26,7 @@ export default function NavBar({ activeTab, handleTabChange, onSearch }: INavBar
                 />
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between gap-2 sm:justify-end">
                 <button
                     onClick={onToggleModoControl}
                     className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border transition-all ${modoControl

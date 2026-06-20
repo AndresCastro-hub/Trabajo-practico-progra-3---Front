@@ -1,47 +1,32 @@
 import { initialFetch } from "@/features/dashboard/recetario/editar/service/initialFetch";
-import { getTokenFromCookie } from "@/hooks/useAuth";
+import { http } from "@/lib/utils/httpClient";
 
-jest.mock("@/hooks/useAuth");
-const mockGetToken = getTokenFromCookie as jest.Mock;
+jest.mock("@/lib/utils/httpClient");
+const mockHttp = http as jest.Mocked<typeof http>;
 
 const mockApiResponse = {
     nombre: "Milanesa",
     descripcion: "Clásica milanesa",
     tiempoPreparacion: 30,
-    imagen_url: "https://www.josimar.com.ar/milanesa-pollo-frita-kg-2/p?srsltid=AfmBOooW7HI4bBryV28HxICIjREUF7qQZ7Gpyq5Cz_Xa2J70gz3kPIR9",
+    imagen_url: "https:test",
     ingredientes: [
         { ingrediente: { id: 1, nombre: "Carne", unidad: "g" }, cantidad: "300" }
     ]
 };
 
 describe("initialFetch", () => {
-    beforeEach(() => {
-        mockGetToken.mockReturnValue("fake-token");
-    });
-
     afterEach(() => jest.clearAllMocks());
 
-    it("hace GET a la URL correcta con el header de autorización", async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => mockApiResponse
-        });
+    it("llama a http.get con la URL correcta", async () => {
+        mockHttp.get.mockResolvedValue(mockApiResponse);
 
         await initialFetch("1");
 
-        expect(global.fetch).toHaveBeenCalledWith(
-            "http://localhost:5000/recipes/1",
-            expect.objectContaining({
-                headers: { Authorization: "Bearer fake-token" }
-            })
-        );
+        expect(mockHttp.get).toHaveBeenCalledWith("/recipes/1");
     });
 
     it("mapea correctamente la respuesta al tipo IForm", async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => mockApiResponse
-        });
+        mockHttp.get.mockResolvedValue(mockApiResponse);
 
         const result = await initialFetch("1");
 
@@ -49,15 +34,15 @@ describe("initialFetch", () => {
             nombre: "Milanesa",
             descripcion: "Clásica milanesa",
             tiempoPreparacion: 30,
-            imagen_url: "https://www.josimar.com.ar/milanesa-pollo-frita-kg-2/p?srsltid=AfmBOooW7HI4bBryV28HxICIjREUF7qQZ7Gpyq5Cz_Xa2J70gz3kPIR9",
+            imagen_url: "https:test",
             ingredientes: [
                 { ingrediente: { id: 1, nombre: "Carne", unidad: "g" }, cantidad: "300" }
             ]
         });
     });
 
-    it("lanza error si la respuesta no es ok", async () => {
-        global.fetch = jest.fn().mockResolvedValue({ ok: false, json: async () => ({}) });
+    it("lanza error si http.get falla", async () => {
+        mockHttp.get.mockRejectedValue(new Error("No se encontró la receta"));
 
         await expect(initialFetch("1")).rejects.toThrow("No se encontró la receta");
     });

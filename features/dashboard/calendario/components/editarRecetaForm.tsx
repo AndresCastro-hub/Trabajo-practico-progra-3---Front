@@ -1,11 +1,9 @@
 import { SelectorReceta } from "./SelectorReceta";
-import { Button } from "@/components/ui/button";
 import { AsignarRecetaTabs } from "./AsignarRecetaTabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { TIPO_COMIDA_MAP } from "../constants/calendario.constants"
 import { useCalendarioContext } from "../context/CalendarioContext";
 import { useEditarReceta } from "../hooks/useEditarReceta";
+import { CheckCircle } from "lucide-react";
 
 interface AsignarRecetaFormProps {
     fecha: string,
@@ -16,46 +14,31 @@ export function EditarRecetaForm({ fecha, tipoComida }: AsignarRecetaFormProps) 
     const { refrescar } = useCalendarioContext();
     const {
         recetas, hayMas,
-        recetaEditada, recetaSeleccionada,
-        loading, error,
-        activeTab, busqueda,
+        recetaSeleccionada, loading,
+        activeTab, busqueda, clearFeedback,
         handleTabChange, handleBusqueda, handleCargarMas, handleEditar, setRecetaSeleccionada
     } = useEditarReceta(fecha, TIPO_COMIDA_MAP[tipoComida], refrescar);
 
-    return(
-        <>
-            <div className="flex flex-col items-center gap-15">
-                <AsignarRecetaTabs activeTab={activeTab} handleTabChange={handleTabChange} />
+    return (
+         <div className="flex flex-col gap-4 min-h-[320px]">
+            <AsignarRecetaTabs activeTab={activeTab} handleTabChange={handleTabChange} />
 
-                <SelectorReceta 
-                    recetas={recetas} 
-                    seleccion={{ actual: recetaSeleccionada, set: setRecetaSeleccionada }}
-                    busqueda={{ texto: busqueda, onSearch: handleBusqueda }}
-                    paginacion={{ hayMas, loading, onCargarMas: handleCargarMas }}
-                />
-            
-                <Button className="w-50 self-center mb-4" disabled={!recetaSeleccionada || loading || !!recetaEditada} onClick={handleEditar}>
-                    Editar
-                </Button>
+            <SelectorReceta
+                clearFeedback={clearFeedback}
+                recetas={recetas}
+                seleccion={{ actual: recetaSeleccionada, set: setRecetaSeleccionada }}
+                busqueda={{ texto: busqueda, onSearch: handleBusqueda }}
+                paginacion={{ hayMas, loading, onCargarMas: handleCargarMas }}
+            />
 
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertCircle size={16} />
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
-
-                {recetaEditada && (
-                <Alert variant="default">
-                    <AlertCircle size={16}  color="#29c02cda" />
-                    <AlertDescription>
-                        <p className="text-green-600">
-                            Receta editada: {recetaEditada.nombre}
-                        </p>
-                    </AlertDescription>
-                </Alert>
-            )}
-            </div>
-        </>
+            <button
+                disabled={!recetaSeleccionada || loading}
+                onClick={handleEditar}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all bg-green-500 hover:bg-green-600 text-white disabled:opacity-50 disabled:cursor-not-allowed mt-auto"
+            >
+                <CheckCircle className="w-4 h-4" />
+                {loading ? "Guardando..." : "Confirmar cambio"}
+            </button>
+        </div>
     )
 }

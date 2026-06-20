@@ -1,11 +1,11 @@
 import { ICalendarWeekItemDto, IDia } from "../types/calendario.types"
 import moment from 'moment';
 
-export const semanaVacia = (fecha:string): IDia[] => {
+export const semanaVacia = (fecha: string): IDia[] => {
     const semana: IDia[] = [];
     const fechaInicial = moment(fecha);
 
-    for(let i=0; i<=6; i++){
+    for (let i = 0; i <= 6; i++) {
         const fechaIterada = moment(fechaInicial).add(i, 'days').format('YYYY-MM-DD');
         semana.push({
             fecha: fechaIterada,
@@ -16,15 +16,15 @@ export const semanaVacia = (fecha:string): IDia[] => {
                 imagen: '',
                 calorias: 0,
                 tiempoPreparacion: 0,
-                },
-                {
-                    tipoComida: 'Cena',
-                    titulo: '',
-                    descripcion: '',
-                    imagen: '',
-                    calorias: 0,
-                    tiempoPreparacion: 0,
-                },
+            },
+            {
+                tipoComida: 'Cena',
+                titulo: '',
+                descripcion: '',
+                imagen: '',
+                calorias: 0,
+                tiempoPreparacion: 0,
+            },
             ]
         });
     }
@@ -36,7 +36,7 @@ export const mapperResponseDTOToSemana = (fechaInicio: string, semanaDto: ICalen
 
     return plantilla.map(dia => {
         const datosDelDia = semanaDto.filter(item => item.fecha === dia.fecha);
-        
+
         if (datosDelDia.length === 0) return dia;
 
         return {
@@ -63,11 +63,13 @@ export const rangoSemana = (fechaActual: string): string => {
 
     const mismoMes = inicioSemana.month() === finSemana.month();
 
-    return mismoMes 
-        ? `${inicioSemana.format('DD')} al ${finSemana.format('D [de] MMMM')}` 
+    return mismoMes
+        ? `${inicioSemana.format('DD')} al ${finSemana.format('D [de] MMMM')}`
         : `${inicioSemana.format('D [de] MMMM')} al ${finSemana.format('D [de] MMMM')}`;
 }
 
 export const isSemanaVacia = (semana: IDia[]): boolean => {
-    return (semana.filter(dia => (dia.comidas.filter(comida => comida.titulo !== ''))).length === 0)
+    return semana.every(dia =>
+        dia.comidas.every(comida => comida.titulo === '')
+    );
 }

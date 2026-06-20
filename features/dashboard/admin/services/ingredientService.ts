@@ -1,63 +1,26 @@
 import { INestError } from "@/interface/apiResponse";
-import { getTokenFromCookie } from "@/hooks/useAuth";
 import { IIngredient, IIngredientResponse, IIngredientService } from "../types/admin.types";
+import { http } from "@/lib/utils/httpClient";
 
-export async function postIngredient({ nombre, unidad }: IIngredientService): Promise<IIngredient> {
+export const postIngredient = async ({ nombre, unidad }: IIngredientService): Promise<IIngredient> => {
     try {
-        const response = await fetch('http://localhost:5000/ingredients', {
-            method: 'POST',
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getTokenFromCookie()}` },
-            body: JSON.stringify({ nombre, unidad })
-        })
-
-        if (!response.ok) {
-            const error: INestError = await response.json();
-            const message = Array.isArray(error.message) ? error.message[0] : error.message;
-            throw new Error(message || "Error en registrar el ingrediente");
-        }
-
-        const data: IIngredient = await response.json();
-
-        return data;
-
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new Error(error.message);
-        }
-
-        throw new Error("Error inesperado");
+        return await http.post<IIngredient>("/ingredients", { nombre, unidad });
+    } catch (err) {
+        const error = err as INestError;
+        const message = Array.isArray(error.message) ? error.message[0] : error.message;
+        throw new Error(message || "Error al registrar el ingrediente");
     }
-}
+};
 
-export async function getIngredients(page: number, name?: string): Promise<IIngredientResponse> {
-    const params = new URLSearchParams({
-        page: String(page),
-        ...(name ? { name } : {}),
-    })
-
+export const getIngredients = async (page: number, name?: string): Promise<IIngredientResponse> => {
     try {
-        const response = await fetch(`http://localhost:5000/ingredients?${params.toString()}`, {
-            method: 'GET',
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getTokenFromCookie()}` },
-        })
-
-        if (!response.ok) {
-            const error: INestError = await response.json();
-            const message = Array.isArray(error.message) ? error.message[0] : error.message;
-            throw new Error(message || "Error en registrar el ingrediente");
-        }
-
-        const data: IIngredientResponse = await response.json()
-
-        if(data.ingredients.length === 0 ) throw new Error("No se encontraron ingredientes.");
-
+        const params = new URLSearchParams({ page: String(page), ...(name ? { name } : {}) });
+        const data = await http.get<IIngredientResponse>(`/ingredients?${params}`);
+        if (data.ingredients.length === 0) throw new Error("No se encontraron ingredientes.");
         return data;
-
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new Error(error.message);
-        }
-
-        throw new Error("Error inesperado");
+    } catch (err) {
+        const error = err as INestError;
+        const message = Array.isArray(error.message) ? error.message[0] : error.message;
+        throw new Error(message || "Error al obtener los ingredientes");
     }
-}
+};
