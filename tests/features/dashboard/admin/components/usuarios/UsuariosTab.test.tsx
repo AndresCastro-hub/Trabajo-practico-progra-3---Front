@@ -4,8 +4,8 @@ import * as useUsersSearchModule from "@/features/dashboard/admin/hooks/useUsers
 
 const mockUseUsersSearch = {
     usuarios: [
-        { id: 4, name: "Elena Martín", email: "elena@test.com", rolName: "administrador" },
-        { id: 5, name: "Juan Pérez", email: "juan@test.com", rolName: "usuario" },
+        { id: 4, name: "Nombre1", email: "nombre1@test.com", rolName: "administrador" },
+        { id: 5, name: "Nombre2", email: "nombre2@test.com", rolName: "usuario" },
     ],
     totalUsers: 20,
     totalPages: 2,
@@ -23,7 +23,7 @@ beforeEach(() => {
 
 afterEach(() => jest.clearAllMocks());
 
-describe("UsuariosTab - renderizado", () => {
+describe("UsuariosTab: renderizado", () => {
     it("renderiza el buscador", () => {
         render(<UsuariosTab />);
         expect(screen.getByPlaceholderText("Buscar por nombre...")).toBeInTheDocument();
@@ -31,13 +31,14 @@ describe("UsuariosTab - renderizado", () => {
 
     it("renderiza los usuarios en la tabla", () => {
         render(<UsuariosTab />);
-        expect(screen.getByText("Elena Martín")).toBeInTheDocument();
-        expect(screen.getByText("Juan Pérez")).toBeInTheDocument();
+        expect(screen.getByText("Nombre1")).toBeInTheDocument();
+        expect(screen.getByText("Nombre2")).toBeInTheDocument();
     });
 
     it("renderiza los emails", () => {
         render(<UsuariosTab />);
-        expect(screen.getByText("elena@test.com")).toBeInTheDocument();
+        expect(screen.getByText("nombre1@test.com")).toBeInTheDocument();
+        expect(screen.getByText("nombre2@test.com")).toBeInTheDocument();
     });
 
     it("renderiza los roles", () => {
@@ -47,8 +48,8 @@ describe("UsuariosTab - renderizado", () => {
     });
 });
 
-describe("UsuariosTab - paginación condicional", () => {
-    it("muestra paginación si hay recetas", () => {
+describe("UsuariosTab: paginación condicional", () => {
+    it("muestra paginación si hay usuarios", () => {
         render(<UsuariosTab />);
         expect(screen.getByText("1")).toBeInTheDocument();
     });

@@ -3,9 +3,8 @@ import AdminContentHeader from "../AdminContentHeader";
 import AdminContentTable, { IColumn } from "../AdminContentTable";
 import IngredienteActionButton from "./IngredienteActionButton";
 import { IIngredientService } from "../../types/admin.types";
-import ErrorState from "@/components/ErrorState";
 import Pagination from "@/components/Pagination";
-import LoadingSpinner from "@/components/LoadingSpinner";
+
 
 const columnas: IColumn<IIngredientService>[] = [
     { header: "Nombre", render: (ingrediente) => <span className="font-small ">{ingrediente.nombre}</span> },
@@ -16,22 +15,16 @@ export default function IngredientesTab() {
     const { ingredientes, totalPages, actualPage, loading, error, handleSearch, handlePageChange } = useIngredientsSearch();
     return (
         <>
-            {
-                loading && <LoadingSpinner />
-            }
             <AdminContentHeader onSearch={handleSearch} actionButton={<IngredienteActionButton />} />
             <AdminContentTable
                 tableContent={ingredientes}
                 columns={columnas}
-                getKey={(ingrediente) => ingrediente.nombre}
+                getKey={(ingrediente) => ingrediente.id}
+                loading={loading}
+                error={error}
             />
-            {!loading && ingredientes.length > 0 && (
+            {(!loading && ingredientes.length > 0) && (
                 <Pagination current={actualPage} lastPage={Math.ceil(totalPages)} onPageChange={handlePageChange} />
-            )}
-            {error && (
-                <>
-                    <ErrorState message={`Error al cargar los ingredientes: ${error}`} onBack={() => handleSearch("")} />
-                </>
             )}
         </>
     )

@@ -14,7 +14,7 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
     const [loading, setLoading] = useState(false);
     const [recetaSeleccionada, setRecetaSeleccionada] = useState<IReceta | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [recetaAsignada, setRecetaAsignando] = useState<IReceta | null>(null);
+    const [recetaAsignada, setRecetaAsignanda] = useState<IReceta | null>(null);
 
     useEffect(() => {
         const fetch = async () => {
@@ -34,7 +34,9 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
                 );
                 setHayMas(filters.page < result.totalPages);
             } catch (err) {
-                setError(err instanceof Error ? err.message : "Error al cargar las recetas")
+                setError(err instanceof Error ? err.message : "Error al cargar las recetas");
+                setRecetas([]);
+                setHayMas(false);
             } finally {
                 setLoading(false);
             }
@@ -62,12 +64,18 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
                 tipo_comida_id: tipoComida,
                 receta_id: recetaSeleccionada.id,
             });
-            setRecetaAsignando(recetaSeleccionada);
+            setRecetaAsignanda(recetaSeleccionada);
             onAsignado();
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error al cargar las recetas")
         }
     };
+
+    const clearFeedback = () => {
+        setError(null);
+        setRecetaSeleccionada(null);
+        handleBusqueda("");
+    }
 
     return {
         recetas, hayMas, loading, error,
@@ -76,5 +84,6 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
         busqueda: filters.busqueda,
         recetaAsignada,
         handleTabChange, handleBusqueda, handleCargarMas, handleAsignar,
+        clearFeedback,
     };
 }

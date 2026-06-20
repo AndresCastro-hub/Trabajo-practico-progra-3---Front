@@ -21,6 +21,8 @@ export async function getUsuarios(page: number, nombre?: string): Promise<IUserR
         }
 
         const data: IUserResponse = await response.json()
+        
+        if(data.users.length === 0 ) throw new Error("No se encontraron usuarios.");
 
         return data;
 

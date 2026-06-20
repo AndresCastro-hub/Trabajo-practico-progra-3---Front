@@ -17,9 +17,10 @@ interface SelectorRecetaProps {
         loading: boolean;
         onCargarMas: () => void;
     };
+    clearFeedback: () => void;
 }
 
-export function SelectorReceta({ recetas, seleccion, busqueda, paginacion }: SelectorRecetaProps) {
+export function SelectorReceta({ recetas, seleccion, busqueda, paginacion, clearFeedback }: SelectorRecetaProps) {
     const [open, setOpen] = useState<boolean>(false)
     const searchRef = useRef<HTMLInputElement>(null)
 
@@ -33,7 +34,10 @@ export function SelectorReceta({ recetas, seleccion, busqueda, paginacion }: Sel
         <div className="relative w-full">
             <button
                 type="button"
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                    setOpen(!open);
+                    clearFeedback();
+                }}
                 className={`w-full flex items-center justify-between px-3 h-11 rounded-xl border transition-colors text-sm
                 ${open ? "border-green-500 ring-2 ring-green-500/20" : "border-slate-200 hover:border-slate-300"}
                 ${seleccion.actual ? "text-slate-900" : "text-slate-400"}`}
