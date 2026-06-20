@@ -30,7 +30,6 @@ export function CarouselCalendario() {
                         className="pl-3 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                     >
                         <Card className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
-                            {/* Header del día */}
                             <header className="flex flex-row justify-between items-center px-4 py-3 border-b border-gray-100 bg-white">
                                 <span className="text-sm font-bold text-green-500 uppercase tracking-wide">
                                     {moment(dia.fecha).locale('es').format('ddd')}

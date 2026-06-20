@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ActiveTab, IReceta } from "@/features/dashboard/recetario/types/recetario.types";
 import { obtenerTodasLasRecetas } from "@/features/dashboard/recetario/services/obtenerTodasLasRecetas";
 import { EditarRecetaDelCalendario } from "../service/calendarioService";
+import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext";
 
 export function useEditarReceta(fecha: string, tipoComida: number, onAsignado: () => void) {
     const [filters, setFilters] = useState({
@@ -15,6 +16,7 @@ export function useEditarReceta(fecha: string, tipoComida: number, onAsignado: (
     const [recetaSeleccionada, setRecetaSeleccionada] = useState<IReceta | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [recetaEditada, setRecetaEditada] = useState<IReceta | null>(null);
+    const { mostrarNotificacion } = useNotificacion()
 
     useEffect(() => {
         const fetch = async () => {
@@ -62,10 +64,10 @@ export function useEditarReceta(fecha: string, tipoComida: number, onAsignado: (
                 tipo_comida_id: tipoComida,
                 receta_id: recetaSeleccionada.id,
             });
-            setRecetaEditada(recetaSeleccionada);
+            mostrarNotificacion(`Receta "${recetaSeleccionada.nombre}" editada correctamente.`, TipoNotificacion.SUCCESS)
             onAsignado();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Error al cargar las recetas")
+        } catch  {
+            mostrarNotificacion("Error al editar la receta.", TipoNotificacion.ERROR)
         }
     };
 
@@ -78,7 +80,7 @@ export function useEditarReceta(fecha: string, tipoComida: number, onAsignado: (
 
     return {
         recetas, hayMas, loading, error,
-        recetaSeleccionada, 
+        recetaSeleccionada,
         activeTab: filters.tab,
         busqueda: filters.busqueda,
         recetaEditada,

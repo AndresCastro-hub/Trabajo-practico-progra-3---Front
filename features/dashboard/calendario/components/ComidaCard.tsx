@@ -9,6 +9,8 @@ import { eliminarRecetaDeCalendario } from "../service/calendarioService";
 import { useCalendarioContext } from "../context/CalendarioContext";
 import { TIPO_COMIDA_MAP } from "../constants/calendario.constants";
 import { EditarDialog } from "./editarDialog";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext";
 import { useState } from "react";
 
 interface IComidaCard {
@@ -19,16 +21,23 @@ interface IComidaCard {
 export function ComidaCard({ receta, fecha }: IComidaCard) {
     const { modoControl } = useModoControl();
     const { refrescar } = useCalendarioContext();
+    const { mostrarNotificacion } = useNotificacion();
     const [openEditar, setOpenEditar] = useState(false);
+    const [openConfirm, setOpenConfirm] = useState(false);
 
-    const handleEliminar = () => {
-        const tipoComidaId = TIPO_COMIDA_MAP[receta.tipoComida]
-        const dtoDelete: EliminarReceta = {
-            tipo_comida_id: tipoComidaId,
-            fecha: fecha
+    const handleEliminar = async () => {
+        try {
+            const tipoComidaId = TIPO_COMIDA_MAP[receta.tipoComida]
+            const dtoDelete: EliminarReceta = {
+                tipo_comida_id: tipoComidaId,
+                fecha: fecha
+            }
+            await eliminarRecetaDeCalendario(dtoDelete)
+            mostrarNotificacion("Receta eliminada del calendario.", TipoNotificacion.SUCCESS)
+            refrescar()
+        } catch {
+            mostrarNotificacion("Error al eliminar la receta.", TipoNotificacion.ERROR)
         }
-        eliminarRecetaDeCalendario(dtoDelete)
-        refrescar()
     }
 
     return (
@@ -49,7 +58,7 @@ export function ComidaCard({ receta, fecha }: IComidaCard) {
                         <Pencil className="w-3 h-3" />
                     </Button>
                     <Button
-                        onClick={handleEliminar}
+                        onClick={() => setOpenConfirm(true)}
                         size="icon-sm"
                         className="border border-gray-200 rounded-lg bg-white text-gray-500 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-none"
                     >
@@ -89,6 +98,14 @@ export function ComidaCard({ receta, fecha }: IComidaCard) {
                 onOpenChange={setOpenEditar}
                 fecha={fecha}
                 tipoComida={receta.tipoComida}
+            />
+
+            <ConfirmDialog
+                open={openConfirm}
+                onOpenChange={setOpenConfirm}
+                titulo="¿Eliminar receta?"
+                descripcion={`Esta acción no se puede deshacer. ¿Estás seguro que querés eliminar "${receta.titulo}" del calendario?`}
+                onConfirm={handleEliminar}
             />
         </Card>
     );
