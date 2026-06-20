@@ -8,7 +8,9 @@ export function ComidasDelDia({ comidasDelDia }: { comidasDelDia: IDia }) {
             {
                 comidasDelDia.comidas.map((comida) => {
                     if(comida.titulo){
-                        return (<ComidaCard key={`${comidasDelDia.fecha} - ${comida.tipoComida} - ${comida.titulo}`} receta={comida} />)
+                        return (<ComidaCard key={`${comidasDelDia.fecha} - ${comida.tipoComida} - ${comida.titulo}`} 
+                            receta={comida} 
+                            fecha={comidasDelDia.fecha} />)
                     }
                     else {
                         return (<EmptyComidaCard key={`${comida.tipoComida} - ${comidasDelDia.fecha}`} tipoComida={comida.tipoComida} fecha={comidasDelDia.fecha}/>)
