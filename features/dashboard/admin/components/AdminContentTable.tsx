@@ -3,6 +3,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { ReactNode } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import ErrorState from "@/components/ErrorState";
 
 export interface IColumn<T> {
     header: string;
@@ -16,11 +18,15 @@ interface IAdminContentTableProps<T> {
     getKey: (item: T) => string | number;
     onEdit?: (item: T) => void;
     onDelete?: (item: T) => void;
+    loading?: boolean;
+    error: string | null;
 }
 
-export default function AdminContentTable<T>({ tableContent, columns, getKey, onEdit, onDelete }: IAdminContentTableProps<T>) {
+export default function AdminContentTable<T>({ tableContent, columns, getKey, onEdit, onDelete, loading, error }: IAdminContentTableProps<T>) {
     return (
         <div className="m-4 rounded-xl border border-border overflow-hidden">
+            {loading && <LoadingSpinner />}
+            {error && <ErrorState message={error} />}
             <Table>
                 <TableHeader>
                     <TableRow className="bg-muted/40 hover:bg-muted/40">
@@ -30,7 +36,12 @@ export default function AdminContentTable<T>({ tableContent, columns, getKey, on
                             </TableHead>
                         ))}
 
-                        {(onEdit || onDelete) && <TableHead />}
+                        {(onEdit || onDelete) && (
+                            <TableHead className="text-small font-semibold tracking-widest uppercase text-gray-700 flex justify-end items-center gap-2"> 
+                                {onEdit && (<div className="p-2"><Pencil size={20} /></div>)}
+                                {onDelete && (<div className="p-2"><Trash2 size={20} /></div>)} 
+                            </TableHead>
+                        )}
                     </TableRow>
                 </TableHeader>
 

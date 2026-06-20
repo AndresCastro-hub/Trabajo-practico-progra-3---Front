@@ -29,7 +29,7 @@ beforeEach(() => {
 
 afterEach(() => jest.clearAllMocks());
 
-describe("IngredientesForm - renderizado", () => {
+describe("IngredientesForm: renderizado", () => {
     it("renderiza el campo de nombre", () => {
         render(<IngredientesForm />);
         expect(screen.getByPlaceholderText("Ej: Tomate")).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe("IngredientesForm - renderizado", () => {
     });
 });
 
-describe("IngredientesForm - estado del botón", () => {
+describe("IngredientesForm: estado del botón", () => {
     it("el botón está deshabilitado si no hay nombre ni unidad", () => {
         render(<IngredientesForm />);
         expect(screen.getByRole("button", { name: /crear ingrediente/i })).toBeDisabled();
@@ -71,7 +71,7 @@ describe("IngredientesForm - estado del botón", () => {
     });
 });
 
-describe("IngredientesForm - renderizados condicionales", () => {
+describe("IngredientesForm: renderizados condicionales", () => {
     it("no muestra el alert de éxito por defecto", () => {
         render(<IngredientesForm />);
         expect(screen.queryByText(/ingrediente creado/i)).not.toBeInTheDocument();
@@ -95,7 +95,7 @@ describe("IngredientesForm - renderizados condicionales", () => {
     });
 });
 
-describe("IngredientesForm - interacciones", () => {
+describe("IngredientesForm: interacciones", () => {
     it("llama a setNuevoIngrediente cuando el usuario escribe en el campo nombre", async () => {
         const user = userEvent.setup();
         render(<IngredientesForm />);

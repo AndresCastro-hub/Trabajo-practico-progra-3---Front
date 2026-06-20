@@ -28,6 +28,10 @@ export interface AsignarRecetaDTO {
     receta_id: number;
 }
 
+export interface EliminarReceta{
+    tipo_comida_id: number;
+    fecha: string;
+}
 /*
 Semana{ 
     dia1:[ comida1: { ... }, comida2: { ... } ],
