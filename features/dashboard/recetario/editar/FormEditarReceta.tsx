@@ -3,14 +3,12 @@ import { useParams, useRouter } from "next/navigation"
 import { ChefHat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import PantallaNotificacion from "../../../../components/PantallaNotificacion";
 import TiempoDePreparacion from "../nueva/components/Form/TiempoDePreparacion";
 import Descripcion from "../nueva/components/Form/Descripcion";
 import IngredientesForm from "../nueva/components/Ingredientes/IngredientesForm";
 import useFormEditarReceta from "./hooks/useFormEditarReceta";
 import Imagen from "./components/form/Imagen";
 import Nombre from "../nueva/components/Form/Nombre";
-import { useEffect } from "react";
 
 export default function FormEditarReceta() {
     const router = useRouter();
@@ -23,10 +21,7 @@ export default function FormEditarReceta() {
         descripcion,
         ingredientes,
         imagen_url,
-        error,
-        success,
         loading,
-        clearFeedback,
         puedeEditarReceta,
         agregarIngrediente,
         setDescripcion,
@@ -36,18 +31,9 @@ export default function FormEditarReceta() {
         handleSubmit
     } = useFormEditarReceta(id);
 
-    useEffect(() => {
-        if (success) {
-            setTimeout(() => {
-                router.push('/admin')
-            }, 1000);
-        }
-    }, [success, router]);
-
+  
     return (
         <div className="min-h-screen bg-slate-50">
-
-            <PantallaNotificacion success={success} successMessage="Receta editada correctamente." error={error} clearFeedback={clearFeedback}/>
 
             {loading && <LoadingSpinner />}
 
