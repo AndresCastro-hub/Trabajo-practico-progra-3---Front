@@ -58,19 +58,19 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
         setFilters(prev => ({ ...prev, page: prev.page + 1 }));
 
    const handleAsignar = async () => {
-    if (!recetaSeleccionada) return;
-    try {
-        await asignarRecetaACalendario({
-            fecha,
-            tipo_comida_id: tipoComida,
-            receta_id: recetaSeleccionada.id,
-        });
-        mostrarNotificacion(`Receta "${recetaSeleccionada.nombre}" asignada correctamente.`, TipoNotificacion.SUCCESS)
-        onAsignado();
-    } catch  {
-        mostrarNotificacion("Error al asignar la receta.", TipoNotificacion.ERROR)
-    }
-};
+        if (!recetaSeleccionada) return;
+        try {
+            await asignarRecetaACalendario({
+                fecha,
+                tipo_comida_id: tipoComida,
+                receta_id: recetaSeleccionada.id,
+            });
+            mostrarNotificacion(`Receta "${recetaSeleccionada.nombre}" asignada correctamente.`, TipoNotificacion.SUCCESS)
+            onAsignado();
+        } catch  {
+            mostrarNotificacion("Error al asignar la receta.", TipoNotificacion.ERROR)
+        }
+    };
 
     const clearFeedback = () => {
         setError(null);

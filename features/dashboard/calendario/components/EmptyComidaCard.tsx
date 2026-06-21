@@ -1,5 +1,5 @@
 "use client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Utensils } from 'lucide-react';
 import { AsignarRecetaForm } from './AsignarRecetaForm'
 
@@ -28,9 +28,9 @@ export function EmptyComidaCard({ tipoComida, fecha }: EmptyComidaCardProps) {
                             <DialogTitle className="text-white text-lg font-bold">
                                 Asignar receta
                             </DialogTitle>
-                            <p className="text-green-100 text-xs mt-0.5">
+                            <DialogDescription className="text-green-100 text-xs mt-0.5">
                                 {tipoComida} · {fecha}
-                            </p>
+                            </ DialogDescription>
                         </div>
                     </div>
                 </DialogHeader>

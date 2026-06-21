@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import IngredientesForm from "./IngredientesForm";
 
 export default function IngredienteActionButton() {
@@ -14,6 +14,9 @@ export default function IngredienteActionButton() {
             <DialogContent className="bg-white border border-border rounded-xl">
                 <DialogHeader>
                     <DialogTitle>Nuevo Ingrediente</DialogTitle>
+                    <DialogDescription >
+                        Crea un nuevo ingrediente
+                    </ DialogDescription>
                 </DialogHeader>
                 
                 <IngredientesForm />
