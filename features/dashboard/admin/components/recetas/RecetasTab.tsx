@@ -30,7 +30,6 @@ export default function RecetasTab() {
                 columns={columnas}
                 getKey={(receta) => receta.nombre}
                 onEdit={(receta) => router.push(`/admin/editar/${receta.id}`)}
-                onDelete={() => window.alert("Próximamente")}
                 loading={loading}
                 error={error}
             />
