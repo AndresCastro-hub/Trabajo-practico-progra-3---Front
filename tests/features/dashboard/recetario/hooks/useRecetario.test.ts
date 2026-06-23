@@ -18,9 +18,10 @@ describe("useRecetario", () => {
 
     afterEach(() => jest.clearAllMocks());
 
-    it("inicia con loading true", () => {
+    it("inicia con loading true", async () => {
         const { result } = renderHook(() => useRecetario());
         expect(result.current.loading).toBe(true);
+        await waitFor(() => expect(result.current.loading).toBe(false));
     });
 
     it("carga las recetas correctamente", async () => {

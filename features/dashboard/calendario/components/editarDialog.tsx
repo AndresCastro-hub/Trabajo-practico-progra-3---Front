@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { EditarRecetaForm } from "./editarRecetaForm";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { EditarRecetaForm } from "./EditarRecetaForm";
 import { Utensils } from "lucide-react";
 
 interface IDialog {
@@ -22,9 +22,9 @@ export function EditarDialog({ tipoComida, fecha, open, onOpenChange }: IDialog)
                             <DialogTitle className="text-white text-lg font-bold">
                                 Editar receta asignada
                             </DialogTitle>
-                            <p className="text-green-100 text-xs mt-0.5">
+                            <DialogDescription className="text-green-100 text-xs mt-0.5">
                                 {tipoComida} · {fecha}
-                            </p>
+                            </ DialogDescription>
                         </div>
                     </div>
                 </DialogHeader>
