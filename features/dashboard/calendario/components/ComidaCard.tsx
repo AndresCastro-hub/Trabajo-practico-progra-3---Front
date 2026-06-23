@@ -11,7 +11,8 @@ import { TIPO_COMIDA_MAP } from "../constants/calendario.constants";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext";
 import { useState } from "react";
-import { EditarDialog } from "./editarDialog";
+import { EditarDialog } from "./EditarDialog";
+
 
 interface IComidaCard {
     receta: IComida

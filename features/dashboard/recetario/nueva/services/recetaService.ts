@@ -2,8 +2,6 @@ import { getTokenFromCookie } from "@/hooks/useAuth";
 import { CrearRecetaDTO, RecipeResponseDto } from "../types/receta.dto";
 import { http } from "@/lib/utils/httpClient";
 
-export const crearReceta = async (data: CrearRecetaDTO) => {
-      return http.post<{ id: number }>("/recipes", data);
 export const crearReceta = async (data: CrearRecetaDTO): Promise<RecipeResponseDto> => {
     return http.post("/recipes", data);
 }
