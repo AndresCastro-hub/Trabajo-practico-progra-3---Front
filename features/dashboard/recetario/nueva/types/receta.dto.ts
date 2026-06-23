@@ -22,3 +22,23 @@ export interface EditarRecetaDto{
 
     updatedIngredients?: IngredientDto[]
 }
+
+export class RecipeResponseDto {
+    id!: number;
+    nombre!: string;
+    descripcion?: string;
+    calorias!: number;
+    tiempoPreparacion!: number;
+    imagen_url!: string;
+    ingredientes!: Ingredients[];
+}
+
+export class Ingredients {
+    id!: number;
+    cantidad!: number;
+    ingrediente!: {
+        id: number;
+        nombre: string;
+        unidad: string;
+    };
+}

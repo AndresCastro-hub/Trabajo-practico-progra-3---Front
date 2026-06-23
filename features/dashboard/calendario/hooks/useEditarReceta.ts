@@ -15,7 +15,6 @@ export function useEditarReceta(fecha: string, tipoComida: number, onAsignado: (
     const [loading, setLoading] = useState(false);
     const [recetaSeleccionada, setRecetaSeleccionada] = useState<IReceta | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [recetaEditada, setRecetaEditada] = useState<IReceta | null>(null);
     const { mostrarNotificacion } = useNotificacion()
 
     useEffect(() => {
@@ -73,7 +72,6 @@ export function useEditarReceta(fecha: string, tipoComida: number, onAsignado: (
 
     const clearFeedback = () => {
         setError(null);
-        setRecetaEditada(null);
         setRecetaSeleccionada(null);
         handleBusqueda("");
     }
@@ -83,7 +81,6 @@ export function useEditarReceta(fecha: string, tipoComida: number, onAsignado: (
         recetaSeleccionada,
         activeTab: filters.tab,
         busqueda: filters.busqueda,
-        recetaEditada,
         handleTabChange, handleBusqueda, handleCargarMas, handleEditar,
         setRecetaSeleccionada, clearFeedback
     };
