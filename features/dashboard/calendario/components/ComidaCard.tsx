@@ -8,10 +8,10 @@ import { useModoControl } from "@/context/ModoControlContext"
 import { eliminarRecetaDeCalendario } from "../service/calendarioService";
 import { useCalendarioContext } from "../context/CalendarioContext";
 import { TIPO_COMIDA_MAP } from "../constants/calendario.constants";
-import { EditarDialog } from "./EditarDialog";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext";
 import { useState } from "react";
+import { EditarDialog } from "./editarDialog";
 
 interface IComidaCard {
     receta: IComida
