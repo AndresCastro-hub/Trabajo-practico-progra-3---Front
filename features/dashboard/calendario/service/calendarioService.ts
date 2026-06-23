@@ -1,8 +1,8 @@
-import { AsignarRecetaDTO, EliminarReceta } from "../types/calendario.types";
+import { AsignarRecetaDTO, EliminarReceta, ICalendarWeekItemDto } from "../types/calendario.types";
 import { http } from "@/lib/utils/httpClient";
 
 export const obtenerCalendarioSemanal = async (fecha: string) => {
-    return http.get(`/Calendar/week?fecha=${fecha}`)
+     return http.get<ICalendarWeekItemDto[]>(`/Calendar/week?fecha=${fecha}`);
 }
 
 export const asignarRecetaACalendario = (data: AsignarRecetaDTO) => {
