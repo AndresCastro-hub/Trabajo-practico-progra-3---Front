@@ -11,7 +11,7 @@ interface LoginResponse {
 
 export async function loginService({ email, password }: ILoginCredenciales): Promise<LoginResponse> {
     try {
-        const response = await fetch("http://localhost:5000/users/login", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })

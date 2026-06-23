@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react"
 import { obtenerTodosLosIngredientes } from "../services/ingredientesService"
+import { Ingrediente } from "../types/receta.types"
 
-interface Ingrediente {
-    id: number
-    nombre: string
-    unidad: string
-}
 
 export function useIngredientes() {
     const [ingredientes, setIngredientes] = useState<Ingrediente[]>([])
