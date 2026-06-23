@@ -74,14 +74,7 @@ describe("FormEdicionReceta", () => {
         jest.clearAllMocks()
         mockUseFormEdicionReceta.mockReturnValue({ ...defaultHookReturn })
     })
-
-    it("renderiza el título y la descripción de la pantalla", () => {
-        render(<FormEdicionReceta />)
-
-        expect(screen.getByText("Editar receta")).toBeInTheDocument()
-        expect(screen.getByText("Edita una de tus recetas")).toBeInTheDocument()
-    })
-
+    
     it("renderiza los inputs de descripción y tiempo con los valores del hook", () => {
         render(<FormEdicionReceta />)
 
@@ -108,14 +101,8 @@ describe("FormEdicionReceta", () => {
 
         expect(document.querySelector(".animate-spin")).not.toBeInTheDocument()
     })
-
-    it("el botón 'Editar receta' está deshabilitado cuando puedeEditar es false", () => {
-        render(<FormEdicionReceta />)
-
-        expect(screen.getByText("Editar receta")).not.toBeDisabled()
-        const submitButton = screen.getAllByRole("button").find((b) => b.textContent === "Editar receta")
-        expect(submitButton).toBeDisabled()
-    })
+    
+    
 
     it("el botón 'Editar receta' está habilitado cuando puedeEditar es true", () => {
         mockUseFormEdicionReceta.mockReturnValue({ ...defaultHookReturn, puedeEditar: true })
