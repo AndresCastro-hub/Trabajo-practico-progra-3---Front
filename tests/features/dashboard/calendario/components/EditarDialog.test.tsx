@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
 import { EditarDialog } from "@/features/dashboard/calendario/components/EditarDialog";
+import { render, screen } from "@testing-library/react";
 
 jest.mock("@/features/dashboard/calendario/components/EditarRecetaForm", () => ({
     EditarRecetaForm: ({ fecha, tipoComida }: { fecha: string; tipoComida: string }) => (

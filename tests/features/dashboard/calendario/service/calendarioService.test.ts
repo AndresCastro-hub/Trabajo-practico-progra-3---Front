@@ -16,7 +16,7 @@ describe("obtenerCalendarioSemanal", () => {
     it("llama a http.get con la URL y query correctos", async () => {
         mockHttp.get.mockResolvedValue([]);
         await obtenerCalendarioSemanal("2026-01-01");
-        expect(mockHttp.get).toHaveBeenCalledWith("/calendar/week?fecha=2026-01-01");
+        expect(mockHttp.get).toHaveBeenCalledWith("/Calendar/week?fecha=2026-01-01");
     });
 
     it("devuelve lo que resuelve el http.get", async () => {

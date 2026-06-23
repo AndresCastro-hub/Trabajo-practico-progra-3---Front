@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Utensils } from "lucide-react";
-import { EditarRecetaForm } from "./editarRecetaForm";
+import { EditarRecetaForm } from "./EditarRecetaForm";
 
 interface IDialog {
     tipoComida: string;
