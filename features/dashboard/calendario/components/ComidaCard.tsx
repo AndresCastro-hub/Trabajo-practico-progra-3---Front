@@ -13,6 +13,7 @@ import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext
 import { useState } from "react";
 import { EditarDialog } from "./EditarDialog";
 
+
 interface IComidaCard {
     receta: IComida
     fecha: string

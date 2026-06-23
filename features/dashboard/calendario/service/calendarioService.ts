@@ -2,7 +2,7 @@ import { AsignarRecetaDTO, CalendarioDTO, EliminarReceta, ICalendarWeekItemDto }
 import { http } from "@/lib/utils/httpClient";
 
 export const obtenerCalendarioSemanal = async (fecha: string) => {
-     return http.get<ICalendarWeekItemDto[]>(`/Calendar/week?fecha=${fecha}`);
+     return http.get<ICalendarWeekItemDto[]>(`/calendar/week?fecha=${fecha}`);
 }
 
 export const asignarRecetaACalendario = (data: AsignarRecetaDTO): Promise<CalendarioDTO> => {
