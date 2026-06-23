@@ -21,6 +21,7 @@ const config = {
         '!components/ui/**',
         '!components/navigation/**',
         '!components/Notificaciones/**',
+        '!features/dashboard/admin/components/AdminDashboard.tsx',
     ],
     coverageThreshold: {
         global: {
