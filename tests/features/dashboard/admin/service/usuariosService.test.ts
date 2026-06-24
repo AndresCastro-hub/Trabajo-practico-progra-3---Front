@@ -1,8 +1,9 @@
 import { getUsuarios } from "@/features/dashboard/admin/services/usuariosService";
-import { getTokenFromCookie } from "@/hooks/useAuth";
+import { http } from "@/lib/utils/httpClient";
+import { INestError } from "@/interface/apiResponse";
 
-jest.mock("@/hooks/useAuth");
-const mockGetToken = getTokenFromCookie as jest.Mock;
+jest.mock("@/lib/utils/httpClient");
+const mockHttp = http as jest.Mocked<typeof http>;
 
 const mockResponse = {
     users: [{ id: 1, name: "Elena", email: "elena@test.com", rolName: "administrador" }],
@@ -11,67 +12,41 @@ const mockResponse = {
 };
 
 describe("getUsuarios", () => {
-    beforeEach(() => {
-        mockGetToken.mockReturnValue("fake-token");
-    });
-
     afterEach(() => jest.clearAllMocks());
 
-    it("hace GET con page y sin nombre si no se pasa", async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => mockResponse
-        });
+    it("llama a http.get con page y sin nombre si no se pasa", async () => {
+        mockHttp.get.mockResolvedValue(mockResponse);
 
         await getUsuarios(0);
 
-        expect(global.fetch).toHaveBeenCalledWith(
-            "http://localhost:5000/users/all?page=0",
-            expect.objectContaining({
-                method: "GET",
-                headers: expect.objectContaining({ "Authorization": "Bearer fake-token" })
-            })
-        );
+        expect(mockHttp.get).toHaveBeenCalledWith("/users/all?page=0");
     });
 
-    it("hace GET con page y nombre si se pasa", async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => mockResponse
-        });
+    it("llama a http.get con page y nombre si se pasa", async () => {
+        mockHttp.get.mockResolvedValue(mockResponse);
 
         await getUsuarios(1, "Elena");
 
-        expect(global.fetch).toHaveBeenCalledWith(
-            "http://localhost:5000/users/all?page=1&nombre=Elena",
-            expect.anything()
-        );
+        expect(mockHttp.get).toHaveBeenCalledWith("/users/all?page=1&nombre=Elena");
     });
 
     it("devuelve IUserResponse si la respuesta es ok", async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => mockResponse
-        });
+        mockHttp.get.mockResolvedValue(mockResponse);
 
         const result = await getUsuarios(0);
         expect(result).toEqual(mockResponse);
     });
 
     it("lanza error con el primer mensaje si message es array", async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: false,
-            json: async () => ({ message: ["Error A", "Error B"], error: "Bad Request", statusCode: 400 })
-        });
+        const mockError: INestError = { message: ["Error A", "Error B"], error: "Bad Request", statusCode: 400 };
+        mockHttp.get.mockRejectedValue(mockError);
 
         await expect(getUsuarios(0)).rejects.toThrow("Error A");
     });
 
     it("lanza error con el mensaje si message es string", async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: false,
-            json: async () => ({ message: "No autorizado", error: "Unauthorized", statusCode: 401 })
-        });
+        const mockError: INestError = { message: "No autorizado", error: "Unauthorized", statusCode: 401 };
+        mockHttp.get.mockRejectedValue(mockError);
 
         await expect(getUsuarios(0)).rejects.toThrow("No autorizado");
     });

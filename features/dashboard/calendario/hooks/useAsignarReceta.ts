@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ActiveTab, IReceta } from "@/features/dashboard/recetario/types/recetario.types";
 import { obtenerTodasLasRecetas } from "@/features/dashboard/recetario/services/obtenerTodasLasRecetas";
 import { asignarRecetaACalendario } from "../service/calendarioService";
+import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext";
 
 export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: () => void) {
     const [filters, setFilters] = useState({
@@ -14,7 +15,7 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
     const [loading, setLoading] = useState(false);
     const [recetaSeleccionada, setRecetaSeleccionada] = useState<IReceta | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [recetaAsignada, setRecetaAsignanda] = useState<IReceta | null>(null);
+    const { mostrarNotificacion } = useNotificacion()
 
     useEffect(() => {
         const fetch = async () => {
@@ -56,18 +57,18 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
     const handleCargarMas = () =>
         setFilters(prev => ({ ...prev, page: prev.page + 1 }));
 
-    const handleAsignar = async () => {
+   const handleAsignar = async () => {
         if (!recetaSeleccionada) return;
-        try{
+        try {
             await asignarRecetaACalendario({
                 fecha,
                 tipo_comida_id: tipoComida,
                 receta_id: recetaSeleccionada.id,
             });
-            setRecetaAsignanda(recetaSeleccionada);
+            mostrarNotificacion(`Receta "${recetaSeleccionada.nombre}" asignada correctamente.`, TipoNotificacion.SUCCESS)
             onAsignado();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Error al cargar las recetas")
+        } catch  {
+            mostrarNotificacion("Error al asignar la receta.", TipoNotificacion.ERROR)
         }
     };
 
@@ -82,7 +83,6 @@ export function useAsignarReceta(fecha: string, tipoComida: number, onAsignado: 
         recetaSeleccionada, setRecetaSeleccionada,
         activeTab: filters.tab,
         busqueda: filters.busqueda,
-        recetaAsignada,
         handleTabChange, handleBusqueda, handleCargarMas, handleAsignar,
         clearFeedback,
     };

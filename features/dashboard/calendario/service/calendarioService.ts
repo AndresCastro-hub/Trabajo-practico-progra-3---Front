@@ -1,40 +1,18 @@
-import { INestError } from "@/interface/apiResponse";
-import { getTokenFromCookie } from "@/hooks/useAuth";
-import { AsignarRecetaDTO } from "../types/calendario.types";
+import { AsignarRecetaDTO, CalendarioDTO, EliminarReceta, ICalendarWeekItemDto } from "../types/calendario.types";
+import { http } from "@/lib/utils/httpClient";
 
 export const obtenerCalendarioSemanal = async (fecha: string) => {
-
-    const response = await fetch(`http://localhost:5000/Calendar/week?fecha=${fecha}`, {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${getTokenFromCookie()}`
-        },
-    });
-
-    if (!response.ok) {
-        const error: INestError = await response.json();
-        throw error;
-    }
-
-    return response.json();
+     return http.get<ICalendarWeekItemDto[]>(`/calendar/week?fecha=${fecha}`);
 }
 
-export const asignarRecetaACalendario = async (data: AsignarRecetaDTO) => {
+export const asignarRecetaACalendario = (data: AsignarRecetaDTO): Promise<CalendarioDTO> => {
+    return http.post("/calendar", data);
+}
 
-    const response = await fetch(`http://localhost:5000/Calendar`, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${getTokenFromCookie()}`
-        },
-        body: JSON.stringify(data),
-    });
+export const EditarRecetaDelCalendario = (dto: AsignarRecetaDTO): Promise<CalendarioDTO> => {
+    return http.put("/calendar", dto);
+}
 
-    if (!response.ok) {
-        const error: INestError = await response.json();
-        throw error;
-    }
-
-    return response.json();
+export const eliminarRecetaDeCalendario = (dto: EliminarReceta): Promise<CalendarioDTO> => {
+    return http.delete("/calendar", dto);
 }

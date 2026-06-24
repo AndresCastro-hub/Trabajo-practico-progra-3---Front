@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { registerService } from "../services/registerService";
+import { loginService } from "../../login/services/loginService";
+import { useRouter } from "next/navigation";
 
 interface IRegisterForm {
     name: string
@@ -12,10 +14,10 @@ export function useRegisterForm() {
     const FORM_INICIAL: IRegisterForm = { name: "", email: "", password: "", confirmPassword: "" };
     const [registerForm, setRegisterForm] = useState<IRegisterForm>(FORM_INICIAL)
     const [serverError, setServerError] = useState<string | null>(null);
-    const [usuarioCreado, setUsuarioCreado] = useState<{name: string, email: string} | null>(null);
 
     const { name, email, password, confirmPassword } = registerForm
-    
+
+    const router = useRouter();
 
     const setEmail = (value: string) => {
         setRegisterForm((prev) => ({ ...prev, email: value }))
@@ -38,9 +40,11 @@ export function useRegisterForm() {
         e.preventDefault();
 
         try {
-            const data = await registerService({email, name, password});
-            setUsuarioCreado(data);
+            await registerService({ email, name, password });
+            const { accessToken } = await loginService({ email, password });
+            document.cookie = `token=${accessToken}; path=/`;
             setRegisterForm(FORM_INICIAL);
+            router.push("/recetario");
         } catch (error) {
             if (error instanceof Error) {
                 setServerError(error.message);
@@ -50,5 +54,5 @@ export function useRegisterForm() {
         }
     };
 
-    return { name, email, password, confirmPassword, serverError, usuarioCreado, handleSubmit, setNombre, setEmail, setPassword, setConfirmPassword };
+    return { name, email, password, confirmPassword, serverError, handleSubmit, setNombre, setEmail, setPassword, setConfirmPassword };
 }

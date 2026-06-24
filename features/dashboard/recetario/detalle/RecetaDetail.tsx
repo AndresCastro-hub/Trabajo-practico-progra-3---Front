@@ -8,28 +8,34 @@ import RecetaIngredients from "./components/RecetaIngredients"
 import ErrorState from "@/components/ErrorState"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { eliminarReceta } from "./service/eliminarReceta"
+import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext"
+import { useState } from "react"
+import { ConfirmDialog } from "@/components/ConfirmDialog"
 
 export default function RecetaDetail() {
     const router = useRouter()
     const params = useParams()
     const id = params.id as string
-    
+
     const { receta, loading, error } = useRecetaDetail(id)
+    const { mostrarNotificacion } = useNotificacion()
+    const [openConfirm, setOpenConfirm] = useState(false)
 
     const handleEditar = () => {
         router.push(`/recetario/${id}/editar`)
     }
 
-    const esDePlataforma = () =>{
+    const esDePlataforma = () => {
         return receta?.idUsuario === 1
     }
 
     const handleEliminar = async () => {
-        try{
+        try {
             await eliminarReceta(id)
+            mostrarNotificacion("Receta eliminada correctamente.", TipoNotificacion.SUCCESS)
             router.push("/recetario")
-        }catch{
-            throw new Error('Error al eliminar la receta');
+        } catch {
+            mostrarNotificacion("Error al eliminar la receta.", TipoNotificacion.ERROR)
         }
     }
 
@@ -50,18 +56,20 @@ export default function RecetaDetail() {
                         <span className="text-sm font-medium">Volver</span>
                     </button>
 
-                    {!esDePlataforma() && <RecetaActions onEditar={handleEditar} onEliminar={handleEliminar} />}
-
+                    {!esDePlataforma() && (
+                        <RecetaActions
+                            onEditar={handleEditar}
+                            onEliminar={() => setOpenConfirm(true)}
+                        />
+                    )}
                 </div>
 
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
-
                     <div className="relative h-72 w-full">
-                        <Image src={receta.imagen_url} alt={receta.nombre} fill className="object-cover"/>
+                        <Image src={receta.imagen_url} alt={receta.nombre} fill className="object-cover" />
                     </div>
 
                     <div className="p-6">
-
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">{receta.nombre}</h1>
                         <p className="text-gray-500 mb-6">{receta.descripcion}</p>
 
@@ -79,10 +87,17 @@ export default function RecetaDetail() {
                         </div>
 
                         <RecetaIngredients ingredientes={receta.ingredientes} />
-
                     </div>
                 </div>
             </div>
+
+            <ConfirmDialog
+                open={openConfirm}
+                onOpenChange={setOpenConfirm}
+                titulo="¿Eliminar receta?"
+                descripcion={`Esta acción no se puede deshacer. ¿Estás seguro que querés eliminar la receta "${receta.nombre}"?`}
+                onConfirm={handleEliminar}
+            />
         </section>
     )
 }

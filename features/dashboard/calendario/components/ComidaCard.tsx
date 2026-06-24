@@ -1,72 +1,113 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Utensils } from 'lucide-react';
-import { Pencil, Trash2, Clock, Flame } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Pencil, Trash2, Clock, Flame, Utensils } from 'lucide-react';
 import Image from "next/image";
-import { IComida } from "../types/calendario.types";
+import { EliminarReceta, IComida } from "../types/calendario.types";
 import { useModoControl } from "@/context/ModoControlContext"
+import { eliminarRecetaDeCalendario } from "../service/calendarioService";
+import { useCalendarioContext } from "../context/CalendarioContext";
+import { TIPO_COMIDA_MAP } from "../constants/calendario.constants";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext";
+import { useState } from "react";
+import { EditarDialog } from "./EditarDialog";
 
-export function ComidaCard({receta}: {receta: IComida}) {
+
+interface IComidaCard {
+    receta: IComida
+    fecha: string
+}
+
+export function ComidaCard({ receta, fecha }: IComidaCard) {
     const { modoControl } = useModoControl();
-    return(
-        <Card className="h-full w-full flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group p-0 gap-0 min-h-[33vh]">
-            <CardHeader className="px-3 py-2 flex justify-between items-center bg-gray-50 shrink-0">
-                <CardTitle className="flex flex-row gap-1 items-center text-lg font-semibold text-gray-600">
-                    <span className="p-1.5 border border-gray-300 rounded-xl bg-green-500 text-white">
+    const { refrescar } = useCalendarioContext();
+    const { mostrarNotificacion } = useNotificacion();
+    const [openEditar, setOpenEditar] = useState(false);
+    const [openConfirm, setOpenConfirm] = useState(false);
+
+    const handleEliminar = async () => {
+        try {
+            const tipoComidaId = TIPO_COMIDA_MAP[receta.tipoComida]
+            const dtoDelete: EliminarReceta = {
+                tipo_comida_id: tipoComidaId,
+                fecha: fecha
+            }
+            await eliminarRecetaDeCalendario(dtoDelete)
+            mostrarNotificacion("Receta eliminada del calendario.", TipoNotificacion.SUCCESS)
+            refrescar()
+        } catch {
+            mostrarNotificacion("Error al eliminar la receta.", TipoNotificacion.ERROR)
+        }
+    }
+
+    return (
+        <Card className="w-full flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-0 gap-0">
+            <div className="flex flex-row justify-between items-center px-3 py-2 bg-gray-50 border-b border-gray-100">
+                <span className="flex flex-row items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <span className="p-1 rounded-lg bg-green-500 text-white">
                         <Utensils className="w-3 h-3" />
                     </span>
                     {receta.tipoComida}
-                </CardTitle>
-                
-                <CardAction className="flex flex-row gap-1 items-center">
+                </span>
+                <div className="flex flex-row gap-1">
                     <Button
-                        onClick={() => { /* Editar comida*/ }}
+                        onClick={() => setOpenEditar(true)}
                         size="icon-sm"
-                        className="border border-gray-300 rounded-xl bg-green-500 text-white hover:bg-green-600 transition-colors"
+                        className="border border-gray-200 rounded-lg bg-white text-gray-500 hover:bg-green-50 hover:text-green-600 hover:border-green-200 transition-colors shadow-none"
                     >
-                        <Pencil />
+                        <Pencil className="w-3 h-3" />
                     </Button>
-                    
                     <Button
-                        onClick={() => { /* Eliminar comida*/ }}
+                        onClick={() => setOpenConfirm(true)}
                         size="icon-sm"
-                        className="py-3 border border-gray-300 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors"
+                        className="border border-gray-200 rounded-lg bg-white text-gray-500 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-none"
                     >
-                        <Trash2 />
+                        <Trash2 className="w-3 h-3" />
                     </Button>
-                </CardAction>
-            </CardHeader>
-
-            <CardContent className="p-0 flex flex-col flex-1 min-h-0">
-                <div className="relative w-full aspect-[16/7] shrink-0 overflow-hidden">
-                    <Image
-                        src={receta.imagen}
-                        alt={receta.titulo}
-                        fill
-                        className="object-cover"
-                    />
                 </div>
+            </div>
 
-                <div className="flex flex-col flex-1 min-h-0 px-3 py-2">
-                    <p className="font-bold text-lg line-clamp-3">{receta.titulo}</p>
-                    <p className="text-sm text-gray-600 line-clamp-4 mt-1">{receta.descripcion}</p>
-                    <div className={`flex flex-row mt-auto pt-2 items-center ${modoControl ? 'justify-between' : 'justify-end'}`}>
-                        {
-                            modoControl && (
-                                <p className="flex flex-row items-center gap-1 rounded-xl bg-gray-100 px-2 py-1 text-xs text-gray-600">
-                                    <Flame className="w-3 h-3 text-green-500" />
-                                    {receta.calorias} kcal
-                                </p>
-                            )
-                        }
-                        <p className="flex flex-row items-center gap-1 text-xs text-gray-600 px-2 py-1">
-                            <Clock className="w-3 h-3 text-green-500" />
-                            {receta.tiempoPreparacion} min
-                        </p>
-                    </div>
+            <div className="relative w-full h-[120px] shrink-0 overflow-hidden">
+                <Image
+                    src={receta.imagen}
+                    alt={receta.titulo}
+                    fill
+                    className="object-cover"
+                />
+            </div>
+
+            <CardContent className="px-3 py-2 flex flex-col gap-1">
+                <p className="font-semibold text-sm text-gray-800 line-clamp-1">{receta.titulo}</p>
+                <p className="text-xs text-gray-500 line-clamp-2">{receta.descripcion}</p>
+                <div className={`flex flex-row mt-1 items-center gap-3 ${modoControl ? 'justify-between' : 'justify-end'}`}>
+                    {modoControl && (
+                        <span className="flex flex-row items-center gap-1 text-xs text-gray-500">
+                            <Flame className="w-3 h-3 text-green-500" />
+                            {receta.calorias} kcal
+                        </span>
+                    )}
+                    <span className="flex flex-row items-center gap-1 text-xs text-gray-500">
+                        <Clock className="w-3 h-3 text-green-500" />
+                        {receta.tiempoPreparacion} min
+                    </span>
                 </div>
             </CardContent>
+
+            <EditarDialog
+                open={openEditar}
+                onOpenChange={setOpenEditar}
+                fecha={fecha}
+                tipoComida={receta.tipoComida}
+            />
+
+            <ConfirmDialog
+                open={openConfirm}
+                onOpenChange={setOpenConfirm}
+                titulo="¿Eliminar receta?"
+                descripcion={`Esta acción no se puede deshacer. ¿Estás seguro que querés eliminar "${receta.titulo}" del calendario?`}
+                onConfirm={handleEliminar}
+            />
         </Card>
     );
 }

@@ -18,35 +18,36 @@ export function CarouselCalendario() {
     const router = useRouter();
     const { semana, loading, error } = useCalendarioContext();
 
-    if (loading && isSemanaVacia(semana)) return ( <LoadingSpinner/> );
-
-    if (error) return ( <ErrorState message={error} onBack={() => router.back()} /> );
+    if (loading && isSemanaVacia(semana)) return <LoadingSpinner />;
+    if (error) return <ErrorState message={error} onBack={() => router.back()} />;
 
     return (
-        <Carousel opts={{ align: "start", watchDrag: false }} className="w-full h-full">
-            <CarouselContent className="h-full" >
-                {semana.map((dia) => {
-                    return(
-                        <CarouselItem key={`${dia.fecha}`} className="h-full basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-                            <div className="p-1 h-full">
-                                <Card className="h-full flex flex-col">
-                                    <header className="flex flex-row justify-between items-center border-b px-4 pb-2 shrink-0">
-                                        <h3 className="text-lg font-semibold">
-                                            {`${moment(dia.fecha).locale('es').format('ddd')} ${moment(dia.fecha).locale('es').format('DD')}`}
-                                        </h3>
-                                    </header>
+        <Carousel opts={{ align: "start", watchDrag: false }} className="w-full">
+            <CarouselContent className="-ml-3">
+                {semana.map((dia) => (
+                    <CarouselItem
+                        key={dia.fecha}
+                        className="pl-3 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    >
+                        <Card className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+                            <header className="flex flex-row justify-between items-center px-4 py-3 border-b border-gray-100 bg-white">
+                                <span className="text-sm font-bold text-green-500 uppercase tracking-wide">
+                                    {moment(dia.fecha).locale('es').format('ddd')}
+                                </span>
+                                <span className="text-sm font-semibold text-gray-400">
+                                    {moment(dia.fecha).locale('es').format('DD')}
+                                </span>
+                            </header>
 
-                                    <CardContent className="grid grid-rows-2 gap-5 flex-1 min-h-0 p-3">
-                                        <ComidasDelDia comidasDelDia={dia} />
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                    )}
-                )}
+                            <CardContent className="flex flex-col gap-3 p-3">
+                                <ComidasDelDia comidasDelDia={dia} />
+                            </CardContent>
+                        </Card>
+                    </CarouselItem>
+                ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="-left-5" />
+            <CarouselNext className="-right-5" />
         </Carousel>
     )
 }
