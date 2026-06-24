@@ -43,6 +43,9 @@ export default function RecetaDetail() {
     if (error) return <ErrorState message={error} onBack={() => router.back()} />
     if (!receta) return null
 
+    const messageEliminacion = receta.estaAsignada ? `La receta esta siendo utilizada. ¿Estás seguro que querés eliminar la receta "${receta.nombre}"? Tene en cuenta que se eliminara del calendario.`:
+     `Esta acción no se puede deshacer. ¿Estás seguro que querés eliminar la receta "${receta.nombre}"?`
+
     return (
         <section className="min-h-screen bg-gray-50">
             <div className="max-w-4xl mx-auto px-6 py-8">
@@ -95,7 +98,7 @@ export default function RecetaDetail() {
                 open={openConfirm}
                 onOpenChange={setOpenConfirm}
                 titulo="¿Eliminar receta?"
-                descripcion={`Esta acción no se puede deshacer. ¿Estás seguro que querés eliminar la receta "${receta.nombre}"?`}
+                descripcion={messageEliminacion}
                 onConfirm={handleEliminar}
             />
         </section>
