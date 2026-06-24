@@ -8,6 +8,7 @@ export interface IReceta {
     imagen_url: string
     nombre: string
     tiempoPreparacion: number
+    estaAsignada: boolean
 }
 
 export interface IRecetasParams {
