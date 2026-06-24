@@ -11,7 +11,7 @@ const columnas: IColumn<IUser>[] = [
 ];
 
 export default function UsuariosTab() {
-    const { usuarios, totalPages, actualPage, loading, handlePageChange, handleSearch } = useUsersSearch();
+    const { usuarios, totalPages, actualPage, loading, error, handlePageChange, handleSearch } = useUsersSearch();
     
     return (
         <>
@@ -20,8 +20,10 @@ export default function UsuariosTab() {
                 tableContent={usuarios}
                 columns={columnas}
                 getKey={(usuario) => usuario.id}
+                loading={loading}
+                error={error}
             />
-            {!loading && usuarios.length > 0 && (
+            {(!loading && usuarios.length > 0) && (
                 <Pagination current={actualPage+1} lastPage={Math.ceil(totalPages)} onPageChange={handlePageChange} />
             )}
         </>

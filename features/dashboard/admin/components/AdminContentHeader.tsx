@@ -18,7 +18,7 @@ export default function AdminContentHeader({ onSearch, actionButton }: IAdminCon
                     placeholder="Buscar por nombre..."
                     className="w-full pl-9 pr-4 py-5 bg-background rounded-xl border border-gray-200 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition"
                     onKeyDown={(e) => {
-                    if (e.key === "Enter") onSearch(e.currentTarget.value)
+                        if (e.key === "Enter") onSearch(e.currentTarget.value)
                     }}
                 />
             </div>

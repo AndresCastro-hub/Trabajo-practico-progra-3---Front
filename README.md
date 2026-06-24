@@ -71,8 +71,9 @@ src/
    ```bash
    npm run dev
    ```
+3. Colocar en un archivo .env lo indicado en el .env.example
 
-3. La app corre en `http://localhost:3000`
+4. La app corre en `http://localhost:3000`
 
 > El backend debe estar corriendo en `http://localhost:5000` antes de levantar el frontend.
 

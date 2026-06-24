@@ -8,7 +8,6 @@ import Descripcion from "./components/Form/Descripcion"
 import IngredientesForm from "./components/Ingredientes/IngredientesForm"
 import Imagen from "./components/Form/Imagen"
 import { useRouter } from "next/navigation"
-import PantallaNotificacion from "../../../../components/PantallaNotificacion"
 
 export default function FormCreacionReceta() {
 
@@ -18,10 +17,7 @@ export default function FormCreacionReceta() {
         descripcion,
         ingredientes,
         imagen,
-        error,
-        success,
         loading,
-        clearFeedback,
         setImagen,
         handleSubmit,
         setDescripcion,
@@ -37,8 +33,6 @@ export default function FormCreacionReceta() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-
-            <PantallaNotificacion success={success} successMessage="Receta creada correctamente." error={error} clearFeedback={clearFeedback}/>
 
             {loading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">

@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react"
-import { IEditarRecetaDTO, IForm, IngredienteRow } from "../types/editar.types"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { IEditarRecetaDTO, IForm, IngredientDto, IngredienteRow } from "../types/editar.types"
 import { INestError } from "@/interface/apiResponse"
 import { initialFetch } from "../service/initialFetch"
 import { editarReceta } from "../service/editarRecetaService"
+import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext"
 
 export default function useFormEditarReceta(id: string) {
     const INITIAL_FORM: IForm = {
@@ -12,24 +13,28 @@ export default function useFormEditarReceta(id: string) {
         ingredientes: [{ ingrediente: null, cantidad: "" }],
         imagen_url: ''
     };
+    const { mostrarNotificacion } = useNotificacion()
+
+
+    const recetaOriginal = useRef<IForm>(INITIAL_FORM);
 
     const [form, setForm] = useState<IForm>(INITIAL_FORM);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     const fetchReceta = useCallback(async () => {
         setLoading(true);
-        setError(null);
         try {
             const data = await initialFetch(id);
             setForm(data);
+            recetaOriginal.current = data;
         } catch (err: unknown) {
-                setError(err instanceof Error ? err.message : "Error al cargar la receta");
+            const mensaje = err instanceof Error ? err.message : "Error al cargar la receta"
+            mostrarNotificacion(mensaje, TipoNotificacion.ERROR)
+
         } finally {
             setLoading(false);
         }
-    }, [id]);
+    }, [id, mostrarNotificacion]);
 
     useEffect(() => {
         fetchReceta();
@@ -77,39 +82,62 @@ export default function useFormEditarReceta(id: string) {
         }));
     }
 
-    const mapFormToEditarRecetaDTO = (form: IForm): IEditarRecetaDTO => {
+    const mapDatosFormToEditarRecetaDTO = (form: IForm): IEditarRecetaDTO => {
+        const idsIngredientesEliminados: number[] = recetaOriginal.current.ingredientes.filter((ingredienteOriginal) => {
+            if (!ingredienteOriginal.ingrediente) return false;
+            return !form.ingredientes.some((i) => (i.ingrediente?.id === ingredienteOriginal.ingrediente!.id));
+        })
+            .map((ingredienteEliminado) => ingredienteEliminado.ingrediente!.id);
+
+        const ingredientesNuevos: IngredientDto[] = form.ingredientes.filter((ingredienteDelForm) => {
+            if (!ingredienteDelForm.ingrediente) return false;
+            return !recetaOriginal.current.ingredientes.some((ingredienteOriginal) => ingredienteOriginal.ingrediente?.id === ingredienteDelForm.ingrediente?.id);
+        })
+            .map((ingredienteNuevo) => ({
+                ingrediente_id: ingredienteNuevo.ingrediente!.id,
+                cantidad: Number(ingredienteNuevo.cantidad)
+            }));
+
+        const ingredientesActualizar: IngredientDto[] = form.ingredientes.filter((ingredienteDelForm) => {
+            if (!ingredienteDelForm.ingrediente) return false;
+            return recetaOriginal.current.ingredientes.some((ingredienteOriginal) => {
+                return (
+                    ingredienteOriginal.ingrediente?.id === ingredienteDelForm.ingrediente?.id
+                    && Number(ingredienteOriginal.cantidad) !== Number(ingredienteDelForm.cantidad)
+                );
+            });
+        })
+            .map((ingredientesAActualizar) => ({
+                ingrediente_id: ingredientesAActualizar.ingrediente!.id,
+                cantidad: Number(ingredientesAActualizar.cantidad)
+            }))
+
         return {
             description: form.descripcion,
             prepTime: form.tiempoPreparacion,
-            addedIngredients: form.ingredientes.map((i) => ({
-                ingrediente_id: i.ingrediente!.id,
-                cantidad: Number(i.cantidad)
-            }))
+            deletedIngredientsId: idsIngredientesEliminados,
+            addedIngredients: ingredientesNuevos,
+            updatedIngredients: ingredientesActualizar
         };
     }
 
     const handleSubmit = async () => {
         setLoading(true);
-        setError(null);
-        setSuccess(false);
         try {
-            const payload = mapFormToEditarRecetaDTO(form);
+            const payload = mapDatosFormToEditarRecetaDTO(form);
             await editarReceta(payload, id);
-            setSuccess(true);
+            mostrarNotificacion("Receta editada correctamente.", TipoNotificacion.SUCCESS)
+
         } catch (e) {
             const apiError = e as INestError;
             const mensaje = Array.isArray(apiError.message)
                 ? apiError.message.join(", ")
                 : apiError.message ?? "Error inesperado"
-            setError(mensaje);
-        }finally{
+            mostrarNotificacion(mensaje, TipoNotificacion.ERROR)
+
+        } finally {
             setLoading(false);
         }
-    }
-
-    const clearFeedback = () => {
-        setError(null);
-        setSuccess(false);
     }
 
     const { nombre, tiempoPreparacion, descripcion, ingredientes, imagen_url } = form;
@@ -137,10 +165,7 @@ export default function useFormEditarReceta(id: string) {
         descripcion,
         ingredientes,
         imagen_url,
-        error,
-        success,
         loading,
-        clearFeedback,
         puedeEditarReceta,
         agregarIngrediente,
         setDescripcion,

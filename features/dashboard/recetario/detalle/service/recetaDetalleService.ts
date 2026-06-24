@@ -1,12 +1,6 @@
-import { getTokenFromCookie } from "@/hooks/useAuth"
-import { IRecetaDetalle } from "../../types/recetario.types"
+import { http } from "@/lib/utils/httpClient";
+import { IRecetaDetalle } from "../../types/recetario.types";
 
-export const getRecetaById = async (id: string): Promise<IRecetaDetalle> => {
-    const response = await fetch(`http://localhost:5000/recipes/${id}`,{
-        headers: {
-            'Authorization': `Bearer ${getTokenFromCookie()}`
-        }
-    })
-
-    return response.json()
+export const getRecetaById = (id: string): Promise<IRecetaDetalle> => {
+    return http.get<IRecetaDetalle>(`/recipes/${id}`);
 }

@@ -28,12 +28,15 @@ export interface AsignarRecetaDTO {
     receta_id: number;
 }
 
-/*
-Semana{ 
-    dia1:[ comida1: { ... }, comida2: { ... } ],
-    dia2:[ comida1: { ... }, comida2: { ... } ],
-    dia3:[ comida1: { ... }, comida2: { ... } ],
-    ...
-    7 dias
+export interface EliminarReceta{
+    tipo_comida_id: number;
+    fecha: string;
 }
-*/
+
+export interface CalendarioDTO {
+    id: number,
+    usuario_id: number,
+    fecha: Date,
+    receta_id: number,
+    tipo_comida_id: number,
+}
