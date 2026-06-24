@@ -38,8 +38,9 @@ export default function AdminContentTable<T>({ tableContent, columns, getKey, on
 
                         {(onEdit || onDelete) && (
                             <TableHead className="text-small font-semibold tracking-widest uppercase text-gray-700 flex justify-end items-center gap-2"> 
-                                {onEdit && (<div className="p-2"><Pencil size={20} /></div>)}
-                                {onDelete && (<div className="p-2"><Trash2 size={20} /></div>)} 
+                                {onEdit && (<div className="p-2">Editar</div>)}
+                                {onEdit && onDelete && (<div className="border-l border-gray-200 h-4" />)}
+                                {onDelete && (<div className="p-2">Eliminar</div>)} 
                             </TableHead>
                         )}
                     </TableRow>
@@ -58,13 +59,13 @@ export default function AdminContentTable<T>({ tableContent, columns, getKey, on
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         {onEdit && (
-                                            <Button variant="outline" size="sm" onClick={() => onEdit(item)}>
+                                            <Button variant="outline" className="mr-4"   size="sm" onClick={() => onEdit(item)}>
                                                 <Pencil size={14} />
                                             </Button>
                                         )}
-
+                                        {onEdit && onDelete && (<div className={"border-l border-gray-200 h-4 mr-9"} />)}
                                         {onDelete && (
-                                            <Button variant="outline" size="sm" onClick={() => onDelete(item)}>
+                                            <Button variant="outline" size="sm" className="mr-5" onClick={() => onDelete(item)}>
                                                 <Trash2 size={14} />
                                             </Button>
                                         )}
