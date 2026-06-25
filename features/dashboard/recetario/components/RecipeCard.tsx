@@ -4,7 +4,7 @@ import { IReceta } from "../types/recetario.types"
 import { useModoControl } from "@/context/ModoControlContext"
 import { useRouter } from "next/navigation"
 
-export default function RecipeCard({ recipe }: { recipe: IReceta }) {
+export default function RecipeCard({ recipe, priority = false }: { recipe: IReceta, priority?: boolean }) {
 
     const { modoControl } = useModoControl()
     const router = useRouter()
@@ -20,6 +20,7 @@ export default function RecipeCard({ recipe }: { recipe: IReceta }) {
                     src={recipe.imagen_url}
                     alt={recipe.nombre}
                     fill
+                    priority={priority}
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 {
