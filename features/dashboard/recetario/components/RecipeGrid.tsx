@@ -23,8 +23,8 @@ export default function RecipeGrid({ recetas, loading }: RecipeGridProps) {
     return (
         <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {recetas.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
+                {recetas.map((recipe, index) => (
+                    <RecipeCard key={recipe.id} recipe={recipe} priority={index < 4} />
                 ))}
             </div>
         </>
