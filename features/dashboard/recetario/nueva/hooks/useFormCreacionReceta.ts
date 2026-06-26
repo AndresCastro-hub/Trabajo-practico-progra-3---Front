@@ -5,6 +5,7 @@ import { crearReceta, subirImagenReceta } from "../services/recetaService"
 import { INestError } from "@/interface/apiResponse"
 import { useRouter } from "next/navigation"
 import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext"
+import { useAuth } from "@/hooks/useAuth"
 
 export default function useFormCreacionReceta() {
 
@@ -20,6 +21,7 @@ export default function useFormCreacionReceta() {
     const [loading, setLoading] = useState<boolean>(false)
 
     const router = useRouter()
+    const { role } = useAuth();
     const { mostrarNotificacion } = useNotificacion()
 
     const setTiempoDePreparacion = (tiempoDePreparacion: number) => {
@@ -73,7 +75,11 @@ export default function useFormCreacionReceta() {
             }
             resetForm()
             mostrarNotificacion("Receta creada correctamente.", TipoNotificacion.SUCCESS)
-            router.push("/recetario")
+            if (role === "administrador") {
+                router.push("/admin")
+            } else {
+                router.push("/recetario")
+            }
         } catch (e) {
             const apiError = e as INestError
             const mensaje = Array.isArray(apiError.message)
