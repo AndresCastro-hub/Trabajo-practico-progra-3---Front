@@ -4,8 +4,12 @@ import { INestError } from "@/interface/apiResponse"
 import { initialFetch } from "../service/initialFetch"
 import { editarReceta } from "../service/editarRecetaService"
 import { TipoNotificacion, useNotificacion } from "@/context/NotificacionContext"
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth"
 
 export default function useFormEditarReceta(id: string) {
+    const router = useRouter();
+    const { role } = useAuth();
     const INITIAL_FORM: IForm = {
         nombre: '',
         tiempoPreparacion: 0,
@@ -127,6 +131,12 @@ export default function useFormEditarReceta(id: string) {
             const payload = mapDatosFormToEditarRecetaDTO(form);
             await editarReceta(payload, id);
             mostrarNotificacion("Receta editada correctamente.", TipoNotificacion.SUCCESS)
+
+            if (role === "administrador") {
+                router.push("/admin")
+            } else {
+                router.push("/recetario")
+            }
 
         } catch (e) {
             const apiError = e as INestError;

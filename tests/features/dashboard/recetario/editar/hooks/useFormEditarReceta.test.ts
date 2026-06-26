@@ -5,6 +5,7 @@ import { initialFetch } from "@/features/dashboard/recetario/editar/service/init
 import { editarReceta } from "@/features/dashboard/recetario/editar/service/editarRecetaService";
 import { NotificacionProvider, TipoNotificacion, useNotificacion } from "@/context/NotificacionContext";
 
+jest.mock("next/navigation", () => ({ useRouter: () => ({ push: jest.fn() }) }));
 jest.mock("@/features/dashboard/recetario/editar/service/initialFetch");
 jest.mock("@/features/dashboard/recetario/editar/service/editarRecetaService");
 jest.mock("@/context/NotificacionContext", () => ({
